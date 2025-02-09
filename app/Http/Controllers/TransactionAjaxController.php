@@ -51,8 +51,14 @@ class TransactionAjaxController extends Controller
 		// dd($request->all());
 		// Fetch subcategories with optional search
 		$values = Category::when($request->search, function ($query) use ($request) {
-			$query->where('name', 'LIKE', '%' . $request->search . '%');
-		})->pluck('name', 'id');
+								$query->where('name', 'LIKE', '%' . $request->search . '%');
+							})
+							->when($request->type, function ($query) use ($request){
+								$query->where('type', $request->type);
+							})
+							// ->ddrawsql();
+							->pluck('name', 'id');
+		// dd($values);
 
 		// Convert to plain array format
 		$formattedValues = $values->map(function ($name, $id) {

@@ -15,11 +15,17 @@
 
 						<div class="col-md-6 @error('type') has-error @enderror">
 							<label for="type" class="col-form-label">Transaction Type</label>
-							<select id="type" name="type" class="form-select form-select-sm @error('type') is-invalid @enderror" placeholder="Please choose">
-								<option value="">Please choose</option>
-								<option value="income">Income</option>
-								<option value="expense">Expense</option>
-							</select>
+							<!-- <br/> -->
+							<div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio1" value="income">
+									<label class="form-check-label btn btn-sm" for="inlineRadio1">Income</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio2" value="expense">
+									<label class="form-check-label btn btn-sm" for="inlineRadio2">Expense</label>
+								</div>
+							</div>
 							@error('type')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
@@ -135,6 +141,7 @@ $('#category').select2({
 		data: function (params) {
 			return {
 				_token: '{!! csrf_token() !!}',
+				type: $('input[name="type"]').val(),
 				search: params.term,				// Search query
 			}
 		},
