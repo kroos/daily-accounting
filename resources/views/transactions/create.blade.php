@@ -141,7 +141,7 @@ $('#category').select2({
 		data: function (params) {
 			return {
 				_token: '{!! csrf_token() !!}',
-				type: $('input[name="type"]').val(),
+				type: $('input[name="type"]:checked').val(),
 				search: params.term,				// Search query
 			}
 		},
