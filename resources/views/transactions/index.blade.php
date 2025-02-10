@@ -129,7 +129,13 @@ $('#transactionTable').DataTable({
 		{
 			data: 'id',
 			render: function(data){
-				return `<a href="transactions/${data}/edit" class="btn btn-sm btn-primary">Edit</a>`
+				return `
+					<div class="m-0">
+						<a href="transactions/${data}" class=""><i class="fa-regular fa-file-pdf"></i></a>
+						<a href="transactions/${data}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
+						<a class="text-danger delete" data-id="${data}"><i class="fa-solid fa-trash-can"></i></a>
+					</div>
+					`
 			}
 		}
 	],
