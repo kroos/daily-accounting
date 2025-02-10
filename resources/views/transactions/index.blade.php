@@ -46,6 +46,7 @@
 							<th>Category</th>
 							<th>Amount</th>
 							<th>Description</th>
+							<th></th>
 						</tr>
 					</thead>
 			</table>
@@ -124,7 +125,13 @@ $('#transactionTable').DataTable({
 				return 'RM' + parseFloat(data).toFixed(2); // Format amount as decimal
 			}
 		},
-		{ data: 'description' }
+		{ data: 'description' },
+		{
+			data: 'id',
+			render: function(data){
+				return `<a href="transactions/${data}/edit" class="btn btn-sm btn-primary">Edit</a>`
+			}
+		}
 	],
 	initComplete: function(settings, response) {
 		// console.log(response); // This runs after successful loading
