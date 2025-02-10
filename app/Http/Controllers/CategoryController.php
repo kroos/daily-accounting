@@ -48,7 +48,7 @@ class CategoryController extends Controller
 	 */
 	public function index(): View
 	{
-		//
+		return view('categories.index');
 	}
 
 	/**
@@ -56,7 +56,7 @@ class CategoryController extends Controller
 	 */
 	public function create(): View
 	{
-		//
+		return view('categories.create');
 	}
 
 	/**
@@ -64,7 +64,28 @@ class CategoryController extends Controller
 	 */
 	public function store(Request $request): RedirectResponse
 	{
-		//
+		$request->validate([
+				'type' => 'required|in:income,expense',
+				'category' => 'required',
+				'color' => ['required', 'regex:/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/'],
+			], [
+				'type' => 'Please choose :attribute',
+				'category' => 'Please choose :attribute',
+				'color' => 'Please choose :attribute',
+				'color.regex' => 'Invalid color format. Please use a valid hex code (e.g., #ff0000).',
+			], [
+				'type' => 'Type',
+				'category' => 'Category',
+				'color' => 'Color',
+		]);
+
+		// Store transaction
+		Category::create([
+			'type' => $request->type,
+			'category' => $request->category,
+			'color' => $request->color,
+		]);
+		return redirect()->route('categories.create')->with('success', 'Category saved successfully!');
 	}
 
 	/**
@@ -72,7 +93,7 @@ class CategoryController extends Controller
 	 */
 	public function show(Category $category): View
 	{
-		//
+		return view('categories.show', ['category' => $category]);
 	}
 
 	/**
@@ -80,7 +101,7 @@ class CategoryController extends Controller
 	 */
 	public function edit(Category $category): View
 	{
-		//
+		return view('categories.edit', ['category' => $category]);
 	}
 
 	/**
@@ -88,7 +109,28 @@ class CategoryController extends Controller
 	 */
 	public function update(Request $request, Category $category): RedirectResponse
 	{
-		//
+		$request->validate([
+				'type' => 'required|in:income,expense',
+				'category' => 'required',
+				'color' => ['required', 'regex:/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/'],
+			], [
+				'type' => 'Please choose :attribute',
+				'category' => 'Please choose :attribute',
+				'color' => 'Please choose :attribute',
+				'color.regex' => 'Invalid color format. Please use a valid hex code (e.g., #ff0000).',
+			], [
+				'type' => 'Type',
+				'category' => 'Category',
+				'color' => 'Color',
+		]);
+
+		// Store transaction
+		$category->update([
+			'type' => $request->type,
+			'category' => $request->category,
+			'color' => $request->color,
+		]);
+		return redirect()->route('categories.index')->with('success', 'Category update successfully!');
 	}
 
 	/**

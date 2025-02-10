@@ -39,7 +39,7 @@
 				</div>
 
 				<table id="transactionTable" class="table my-2">
-					<thead>
+					<thead class="table table hover">
 						<tr>
 							<th>Date</th>
 							<th>Type</th>
@@ -99,7 +99,9 @@ $('#transactionTable').DataTable({
 	'dom': 'Bfrtip',
 	ajax: {
 		url: route,
+		type: 'POST',
 		data: function(da){
+				da._token = '{!! csrf_token() !!}';
 				da.fromDate = $('#fromDate').val();
 				da.toDate = $('#toDate').val();
 		},
@@ -118,7 +120,7 @@ $('#transactionTable').DataTable({
 				return data.charAt(0).toUpperCase() + data.slice(1); // Capitalize the first letter
 			}
 		},
-		{ data: 'belongstocategory.name' },
+		{ data: 'belongstocategory.category' },
 		{
 			data: 'amount',
 			render: function(data) {
@@ -148,8 +150,8 @@ $('#transactionTable').on('xhr.dt', function(e, settings, response) {
 	console.log("Data Refreshed:");
 	console.log(response); // `response` contains the latest response data
 	if(response) {
-		updateChart('incomeChart', 'Income Breakdown', response.incomeData, incomeColor);
-		updateChart('expenseChart', 'Expense Breakdown', response.expenseData, expenseColor);
+		updateChart('incomeChart', 'Income Breakdown', response.incomeData, response.table);
+		updateChart('expenseChart', 'Expense Breakdown', response.expenseData, response.table);
 		updateTotalChart('totalChart', 'Total Income vs Expenses', response.totalIncome, response.totalExpense, incomeColor, expenseColor);
 	}
 });
@@ -161,12 +163,18 @@ function updateTable() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Update Chart
 
-function updateChart(canvasId, label, data, color) {
+function updateChart(canvasId, label, data, tableData) {
 	const ctx = document.getElementById(canvasId);
 
 	if (chartInstances[canvasId]) {
 		chartInstances[canvasId].destroy();
 	}
+
+	// Get colors dynamically based on categories
+	let colors = Object.keys(data).map(category => {
+		let item = tableData.find(entry => entry.belongstocategory.category === category);
+		return item ? item.belongstocategory.color : '#000000'; // Default to black if not found
+	});
 
 	chartInstances[canvasId] = new Chart(ctx, {
 		type: 'pie',
@@ -174,7 +182,7 @@ function updateChart(canvasId, label, data, color) {
 			labels: Object.keys(data),
 			datasets: [{
 				data: Object.values(data),
-				backgroundColor: Object.keys(data).map(() => color) // All same color
+				backgroundColor: colors,
 			}]
 		},
 		options: {

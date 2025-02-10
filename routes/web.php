@@ -20,3 +20,4 @@ Route::middleware(['auth', 'password.confirm'])->group(function () {
 
 require __DIR__.'/auth.php';
 require __DIR__.'/authTransaction.php';
+require __DIR__.'/authCategory.php';

@@ -29,6 +29,9 @@ use Illuminate\Http\Request;
 // use Illuminate\Support\Collection;
 // use Illuminate\Support\Facades\Storage;
 
+// load pdf
+use Barryvdh\DomPDF\Facade\Pdf;
+
 // load Carbon library
 use \Carbon\Carbon;
 use \Carbon\CarbonPeriod;
@@ -120,6 +123,7 @@ class TransactionController extends Controller
 	public function show(Transaction $transaction): View
 	{
 		return view('transactions.show', ['transaction' => $transaction]);
+		// Pdf::loadView('email.show', ['email' => $r])->setOption(['dpi' => 120])->save(storage_path('app/public/pdf/').'BTM-ER-'.Carbon::parse($r->created_at)->format('ym').str_pad( $r->id, 3, "0", STR_PAD_LEFT).'.pdf');
 	}
 
 	/**

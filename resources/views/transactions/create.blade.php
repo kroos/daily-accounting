@@ -16,7 +16,7 @@
 						<div class="col-md-6 @error('type') has-error @enderror">
 							<label for="type" class="col-form-label">Transaction Type</label>
 							<!-- <br/> -->
-							<div>
+							<div class="@error('type') is-invalid @enderror">
 								<div class="form-check form-check-inline">
 									<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio1" value="income">
 									<label class="form-check-label btn btn-sm" for="inlineRadio1">Income</label>
@@ -40,8 +40,8 @@
 						</div>
 					</div>
 
-					<div class="row mt-3 @error('date') has-error @enderror">
-						<div class="col-md-6">
+					<div class="row mt-3">
+						<div class="col-md-6 @error('date') has-error @enderror">
 							<label for="date" class="col-form-label">Date</label>
 							<input type="text" name="date" id="date" class="form-control form-control-sm @error('date') is-invalid @enderror" placeholder="Date">
 							@error('date')
@@ -134,8 +134,8 @@ $('#category').select2({
 	closeOnSelect: true,
 	width: '100%',
 	ajax: {
-		url: '{{ route('ajax.categories') }}',
-		type: 'GET',
+		url: '{{ route('ajax.getCategories') }}',
+		type: 'POST',
 		dataType: 'json',
 		delay: 250,											// Delay to reduce server requests
 		data: function (params) {
@@ -163,7 +163,6 @@ $('#scanBarcode').click(function () {
 		Quagga.stop();
 		$('#scannerModal').modal('hide');
 	});
-
 
 	Quagga.init({
 		inputStream: {

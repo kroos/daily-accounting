@@ -43,31 +43,6 @@ use Log;
 
 class TransactionAjaxController extends Controller
 {
-	/**
-	 * Fetch categories for Select2 AJAX.
-	 */
-	public function getCategories(Request $request): JsonResponse
-	{
-		// dd($request->all());
-		// Fetch subcategories with optional search
-		$values = Category::when($request->search, function ($query) use ($request) {
-								$query->where('name', 'LIKE', '%' . $request->search . '%');
-							})
-							->when($request->type, function ($query) use ($request){
-								$query->where('type', $request->type);
-							})
-							// ->ddrawsql();
-							->pluck('name', 'id');
-		// dd($values);
-
-		// Convert to plain array format
-		$formattedValues = $values->map(function ($name, $id) {
-			return ['id' => $id, 'text' => $name];
-		})->values(); // Ensure indexed array
-
-		return response()->json($formattedValues);
-	}
-
 	public function getTransactions(Request $request): JsonResponse
 	{
 		$request->validate([
@@ -85,8 +60,8 @@ class TransactionAjaxController extends Controller
 		->get();
 
 		// Group transactions by type
-		$incomeData = $transactions->where('type', 'income')->groupBy('belongstocategory.name')->map->sum('amount');
-		$expenseData = $transactions->where('type', 'expense')->groupBy('belongstocategory.name')->map->sum('amount');
+		$incomeData = $transactions->where('type', 'income')->groupBy('belongstocategory.category')->map->sum('amount');
+		$expenseData = $transactions->where('type', 'expense')->groupBy('belongstocategory.category')->map->sum('amount');
 		// dd($incomeData);
 
 		// Calculate total income & total expenses
