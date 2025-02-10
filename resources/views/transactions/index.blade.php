@@ -218,4 +218,55 @@ function updateTotalChart(canvasId, label, totalIncome, totalExpense, incomeColo
 updateTable();
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+$(document).on('click', '.delete', function(e){
+	var ackID = $(this).data('id');
+	var ackTable = $(this).data('table');
+	SwalDelete(ackID, ackTable);
+	e.preventDefault();
+});
+
+function SwalDelete(ackID, ackTable){
+	swal.fire({
+		title: 'Delete Transaction',
+		text: 'Are you sure to delete this transaction?',
+		icon: 'info',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		cancelButtonText: 'Cancel',
+		confirmButtonText: 'Yes',
+		showLoaderOnConfirm: true,
+
+		preConfirm: function() {
+			return new Promise(function(resolve) {
+				$.ajax({
+					url: '{{ url('transactions') }}' + '/' + ackID,
+					type: 'DELETE',
+					dataType: 'json',
+					data: {
+						id: ackID,
+						_token : $('meta[name=csrf-token]').attr('content')
+					},
+				})
+				.done(function(response){
+					swal.fire('Accept', response.message, response.status)
+					.then(function(){
+						window.location.reload(true);
+					});
+				})
+				.fail(function(){
+					swal.fire('Oops...', 'Something went wrong with ajax!', 'error');
+				})
+			});
+		},
+		allowOutsideClick: false
+	})
+	.then((result) => {
+		if (result.dismiss === swal.DismissReason.cancel) {
+			swal.fire('Cancel Action', '', 'info')
+		}
+	});
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 @endsection

@@ -119,7 +119,7 @@ class TransactionController extends Controller
 	 */
 	public function show(Transaction $transaction): View
 	{
-		//
+		return view('transactions.show', ['transaction' => $transaction]);
 	}
 
 	/**
@@ -141,8 +141,9 @@ class TransactionController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 */
-	public function destroy(Transaction $transaction): RedirectResponse
+	public function destroy(Transaction $transaction): JsonResponse
 	{
-		//
+		$transaction->delete();
+		return response()->json(['message' => 'Transaction deleted', 'status' => 'info']);
 	}
 }

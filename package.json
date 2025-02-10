@@ -36,6 +36,7 @@
         "laravel-vite-plugin": "^1.0",
         "moment": "^2.30.1",
         "postcss": "^8.5.1",
+        "sass-embedded": "^1.83.4",
         "select2": "^4.1.0-rc.0",
         "select2-bootstrap-5-theme": "^1.3.0",
         "sweetalert2": "^11.15.10",

@@ -1,5 +1,4 @@
 <?php
-
 namespace {{ namespace }};
 
 use {{ rootNamespace }}Http\Controllers\Controller;
@@ -18,10 +17,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\Request;
+use {{ namespacedRequests }}
 
 // load validation
-use {{ namespacedRequests }}
+
 
 // load batch and queue
 use Illuminate\Bus\Batch;
