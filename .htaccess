@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# Redirect all requests to the public directory internally
+	RewriteCond %{REQUEST_URI} !^/public/
+	RewriteRule ^(.*)$ public/$1 [L]
+
+	# Prevent direct access to sensitive files
+	<FilesMatch "\.(env|git|htaccess|htpasswd|xml|json|config|lock|sql|ini|sh)$">
+		Order Allow,Deny
+		Deny from all
+	</FilesMatch>
+</IfModule>
