@@ -15,11 +15,27 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 // use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+// helper
+use Illuminate\Support\Str;
+
 class Category extends Model
 {
 	use SoftDeletes; // Enable SoftDeletes
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// change value attribute
+	public function setCategoryAttribute($value)
+	{
+		$this->attributes['category'] = ucwords(Str::lower($value));
+	}
 
+	public function setTypeAttribute($value)
+	{
+		$this->attributes['type'] = Str::lower()($value);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// db relation
 	public function hasmanytransactions(): HasMany
 	{
 		return $this->hasMany(Transaction::class, 'category_id');

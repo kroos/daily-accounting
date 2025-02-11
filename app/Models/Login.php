@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+// helper
+use Illuminate\Support\Str;
+
 // custom email reset password in
 // https://laracasts.com/discuss/channels/laravel/how-to-override-the-tomail-function-in-illuminateauthnotificationsresetpasswordphp
 // use App\Notifications\ResetPassword;
@@ -54,18 +57,8 @@ class Login extends Authenticatable implements MustVerifyEmail
 		'remember_token',
 	];
 
-	 /**
-	 * The attributes that should be cast.
-	 *
-	 * @var array<string, string>
-	 */
-	// protected $casts = [
-	// 	'email_verified_at' => 'datetime',
-	// 	// 'password' => 'hashed',		// this is because we are using clear text password
-	// ];
-
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	// db relation hasMany/hasOne
+	// change values
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// db relation belongsTo

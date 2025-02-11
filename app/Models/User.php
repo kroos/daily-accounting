@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 // use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+// helper
+use Illuminate\Support\Str;
+
 class User extends Authenticatable
 {
 	/** @use HasFactory<\Database\Factories\UserFactory> */
@@ -26,41 +29,7 @@ class User extends Authenticatable
 	protected $table = 'users';
 	protected $dates = ['deleted_at'];
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	// protected $fillable = [
-	// 	'name',
-	// 	'email',
-	// 	'password',
-	// ];
-
 	protected $guarded = [];
-
-	/**
-	 * The attributes that should be hidden for serialization.
-	 *
-	 * @var list<string>
-	 */
-	// protected $hidden = [
-	// 	'password',
-	// 	'remember_token',
-	// ];
-
-	/**
-	 * Get the attributes that should be cast.
-	 *
-	 * @return array<string, string>
-	 */
-	protected function casts(): array
-	{
-		return [
-			'email_verified_at' => 'datetime',
-			'password' => 'hashed',
-		];
-	}
 
 	 /**
 	 * The attributes that should be cast.
@@ -69,19 +38,19 @@ class User extends Authenticatable
 	 */
 	protected $casts = [
 		'email_verified_at' => 'datetime',
-		// 'password' => 'hashed',		// this is because we are using clear text password
 	];
 
-	// public function getEmailForPasswordReset()
-	// {
-	// 	return $this->email;
-	// }
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// change value attribute
+	public function setNameAttribute($value)
+	{
+		$this->attributes['name'] = ucwords(Str::lower($value));
+	}
 
-	// // this is important for sending email
-	// public function routeNotificationForMail($notification)
-	// {
-	// 	return $this->email;
-	// }
+	public function setEmailAttribute($value)
+	{
+		$this->attributes['email'] = Str::lower($value);
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// db relation hasMany/hasOne

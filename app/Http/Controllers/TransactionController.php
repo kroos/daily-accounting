@@ -80,7 +80,7 @@ class TransactionController extends Controller
 				'amount' => 'required|numeric|min:0.01',
 				'description' => 'nullable|string|max:255',
 				'barcode' => 'nullable|string|max:255',
-				'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Limit to 2MB
+				'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:4096', // Limit to 2MB
 			], [
 				'type' => 'Please choose :attribute',
 				'category_id' => 'Please choose :attribute',
@@ -131,7 +131,7 @@ class TransactionController extends Controller
 	 */
 	public function edit(Transaction $transaction): View
 	{
-		//
+		return view('transactions.edit', ['transaction' => $transaction]);
 	}
 
 	/**
@@ -139,7 +139,48 @@ class TransactionController extends Controller
 	 */
 	public function update(Request $request, Transaction $transaction): RedirectResponse
 	{
-		//
+		$request->validate([
+				'type' => 'required|in:income,expense',
+				'category_id' => 'required|exists:categories,id',
+				'date' => 'required|date',
+				'amount' => 'required|numeric|min:0.01',
+				'description' => 'nullable|string|max:255',
+				'barcode' => 'nullable|string|max:255',
+				'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:4096', // Limit to 2MB
+			], [
+				'type' => 'Please choose :attribute',
+				'category_id' => 'Please choose :attribute',
+				'date' => 'Please insert :attribute',
+				'amount' => 'Please insert :attribute',
+				'description' => 'Please insert :attribute',
+				'barcode' => 'Please scan :attribute',
+				'receipt' => 'Please insert :attribute', // Limit to 2MB
+			], [
+				'type' => 'Type',
+				'category_id' => 'Category',
+				'date' => 'Date',
+				'amount' => 'Amount',
+				'description' => 'Description',
+				'barcode' => 'Barcode',
+				'receipt' => 'Receipt', // Limit to 2MB
+		]);
+
+		// Store transaction
+		$transaction->update([
+			'user_id' => \Auth::user()->belongstouser->id,
+			'type' => $request->type,
+			'category_id' => $request->category_id,
+			'date' => $request->date,
+			'amount' => $request->amount,
+			'description' => $request->description,
+		]);
+
+			// Handle receipt upload
+		if ($request->hasFile('receipt')) {
+			$path = $request->file('receipt')->store('receipts', 'public');
+			$transaction->hasmanyupload()->create(['file_path' => $path, 'file_type' => $request->file('receipt')->extension()]);
+		}
+		return redirect()->route('transactions.index')->with('success', 'Transaction update successfully!');
 	}
 
 	/**

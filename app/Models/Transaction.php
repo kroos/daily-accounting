@@ -15,9 +15,29 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+// helper
+use Illuminate\Support\Str;
+
 class Transaction extends Model
 {
 	use SoftDeletes;
+
+	// change value attribute (this for numbers)
+	protected $casts = [
+		'amount' => 'decimal:2',
+	];
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// change value attribute
+	public function setDescriptionAttribute($value)
+	{
+		$this->attributes['description'] = ucwords(Str::lower($value));
+	}
+
+	public function setTypeAttribute($value)
+	{
+		$this->attributes['type'] = Str::lower($value);
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// db relation hasMany/hasOne

@@ -138,145 +138,56 @@ tr:nth-child(even) {
 </head>
 
 <body>
-<div class="content">
-	<!-- Your content goes here -->
-	<h1>{{ config('app.name', 'Laravel') }}</h1>
+	<div class="content">
+		<!-- Your content goes here -->
+		<h1>{{ config('app.name', 'Laravel') }}</h1>
 
-	<table>
+		<table>
 			<thead>
-					<tr>
-						<th colspan="2"><span class="center">{{ Str::tolower }}</span></th>
-					</tr>
+				<tr>
+					<th colspan="2"><span class="center bold">Transaction</span></th>
+				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>No Rujukan : <span class="bold red">
-						{{ 'BTM-ER-'.\Carbon\Carbon::parse($transaction->created_at)->format('ym').str_pad( $transaction->id, 3, "0", STR_PAD_LEFT) }}
+					<td>Reference No : <span class="bold red">
+						{{ 'T-'.\Carbon\Carbon::parse($transaction->created_at)->format('ym').str_pad( $transaction->id, 3, "0", STR_PAD_LEFT) }}
 					</span>
 					</td>
 					<td>
-						Tarikh Permohonan : <span class="bold">{{ \Carbon\Carbon::parse($transaction->created_at)->format('D, j F Y') }}</span>
+						Date : <span class="bold">{{ \Carbon\Carbon::parse($transaction->created_at)->format('D, j F Y') }}</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						<p class="bold underline">Terma & Syarat :</p>
-						<ul>
-								<li>Permohonan yang tidak lengkap tidak akan diproses</li>
-								<li>Digalakkan untuk tidak menggunakan nombor, simbol, space, dash atau underscore sebagai email ID</li>
-								<li>Digalakkan untuk menggunakan nama sendiri sebagai email ID</li>
-						</ul>
-					</td>
+					<td colspan="2">Name : {{ $transaction->belongstouser->name }}</td>
 				</tr>
 			</tbody>
 			<thead>
 				<tr>
-					<th colspan="2"><span class="center">Pemohon</span></th>
+					<th >Type : {{ ucwords(Str::lower($transaction->type)) }}</th>
+					<th >Transaction Date : {{ \Carbon\Carbon::parse($transaction->date)->format('D, j F Y') }}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td style="width: 50%;">
-						Nama : <span class="bold">{{ $transaction->belongstostaff->nama }}</span>
-					</td>
-					<td style="width: 50%;">
-						Kuliyyah : <span class="bold">{{ $transaction->belongstostaff->belongstomanydepartment->first()->namajabatan }}</span>
-					</td>
+					<td>Category : {{ $transaction->belongstocategory->category }}</td>
+					<td>Amount : RM{{ $transaction->amount }}</td>
 				</tr>
 			</tbody>
+			@if($transaction->hasmanyupload()->get()->count() > 0)
 			<thead>
 				<tr>
-					<th colspan="2"><span class="center">Email ID Yang Dipohon</span></th>
+					<th colspan="2"><span class="center">Attachment</span></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td colspan="2">Jenis Akaun : {{ ($transaction->group_email == 1)?'Email Berkumpulan':'Email Individu' }}</td>
-				</tr>
-				<tr>
-					<td {!! ($transaction->group_email==1)?NULL:'colspan="2"' !!} style="padding: 0px;">
-						<table style="margin-bottom: 0px;">
-							<thead>
-								<tr>
-									<th>Cadangan Email ID</th>
-									<th>Email ID Yang Diluluskan</th>
-									<th>Katalaluan Sementara</th>
-								</tr>
-							</thead>
-							<tbody>
-								@foreach($transaction->hasmanyemailsuggestion()->get() as $v)
-									<tr>
-										<td>{{ $v->email_suggestion }}@unishams.edu.my</td>
-										<td>{{ ($v->approved_email)?'Approved Email ID':NULL }}</td>
-										<td>{{ $v->temp_password }}</td>
-									</tr>
-								@endforeach
-							</tbody>
-						</table>
-					</td>
-					@if($transaction->group_email==1)
-						<td style="padding: 0px;">
-							<table style="margin-bottom: 0px;">
-								<thead>
-									<tr>
-										<th>Ahli Kumpulan</th>
-										<th>Email Ahli Kumpulan</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($transaction->hasmanyemailgroupmember()->get() as $v)
-										<tr>
-											<td>{{ \App\Models\Login::where('email', $v->email_staff)->first()->name }}</td>
-											<td>{{ $v->email_staff }}</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</td>
-					@endif
+					<td> <img src="" alt=""> </td>
+					<td> <img src="" alt=""> </td>
 				</tr>
 			</tbody>
-			<thead>
-				<tr>
-					<th colspan="2"><span class="center red bold">*Peringatan Penting : Anda dikehendaki untuk menukar katalaluan sementara dengan segera setelah mendapat kelulusan dari Bahagian Teknologi Maklumat.*</span></th>
-				</tr>
-			</thead>
-			<thead>
-				<tr>
-					<th colspan="2"><span class="center">Kelulusan Pengarah/Dekan/Ketua Jabatan</span></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-				</tr>
-				<tr>
-					<td>Nama : <span class="bold">{{ ($transaction->belongstoappr->nama) }}</span></td>
-					<td>Tarikh : <span class="bold">{{ (!is_null($transaction->approver_date))?\Carbon\Carbon::parse($transaction->approver_date)->format('D, j F Y'):NULL }}</span></td>
-				</tr>
-				<tr>
-					<td>Catatan : {{ $transaction->approver_remarks }}</td>
-					<td>Status : <span class="bold">{{ $transaction->belongstoapproverstatusloan->status_approval }}</span></td>
-				</tr>
-				<tr>
-					<td colspan="2"><span class="red bold">* Saya mengesahkan bahawa maklumat yang diberikan adalah benar dan untuk urusan rasmi.</span></td>
-				</tr>
-				<tr>
-					<th colspan="2"><span class="center">Untuk Kegunaan Pejabat</span></th>
-				</tr>
-				<tr>
-					<td colspan="2">
-						Status Permohonan : <span class="bold">{{ $transaction->belongstostatusemail->status_loan }}</span>
-					</td>
-				</tr>
-				<tr>
-					<td>Nama : <span class="bold">{{ $transaction->belongstobtmappr->nama }}</span></td>
-					<td>Tarikh : <span class="bold">{{ (!is_null($transaction->btm_date))?\Carbon\Carbon::parse($transaction->btm_date)->format('D, j M Y'):NULL }}</span></td>
-				</tr>
-				<tr>
-					<td colspan="2">Catatan : {{ $transaction->btm_remarks }}</td>
-				</tr>
-			</tbody>
-	</table>
-</div>
+			@endif
+		</table>
+	</div>
 </body>
 </html>
