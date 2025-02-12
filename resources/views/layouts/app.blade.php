@@ -25,7 +25,6 @@ $currentYear = Carbon::now()->year;
 	<!-- Bootswatch Cerulean CSS -->
 	<link href="{{ URL::asset('css/bootstrap.css') }}" rel="stylesheet">
 	<!-- Livewire CSS -->
-	@livewireStyles
 
 </head>
 
@@ -73,5 +72,4 @@ $currentYear = Carbon::now()->year;
 		});
 	})(jQuery);
 </script>
-@livewireScripts
 </html>
