@@ -21,11 +21,17 @@
 
 					<div class="col-md-6 @error('type') has-error @enderror">
 						<label for="tp" class="col-form-label">Type</label>
-						<select id="tp" name="type" class="form-select form-select-sm @error('type') is-invalid @enderror" placeholder="Please choose">
-							<option value="">Please choose</option>
-							<option value="income" selected="{{ old('type') }}">Income</option>
-							<option value="expense" selected="{{ old('type') }}">Expense</option>
-						</select>
+
+						<div class="@error('type') is-invalid @enderror">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio1" value="income" @if(old('type') == 'income') checked @endif>
+								<label class="form-check-label btn btn-sm" for="inlineRadio1">Income</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio2" value="expense" @if(old('type') == 'expense') checked @endif>
+								<label class="form-check-label btn btn-sm" for="inlineRadio2">Expense</label>
+							</div>
+						</div>
 						@error('type')
 							<div class="invalid-feedback">{{ $message }}</div>
 						@enderror
@@ -53,21 +59,11 @@
 
 @section('js')
 ////////////////////////////////////////////////////////////////////////////////////////////
-$('#tp').select2({
-	theme: 'bootstrap-5',
-	placeholder: 'Please choose',
-	allowClear: true,
-	closeOnSelect: true,
-	width: '100%',
-});
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 $('#clr').minicolors();
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////

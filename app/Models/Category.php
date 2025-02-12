@@ -31,7 +31,7 @@ class Category extends Model
 
 	public function setTypeAttribute($value)
 	{
-		$this->attributes['type'] = Str::lower()($value);
+		$this->attributes['type'] = Str::lower($value);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////

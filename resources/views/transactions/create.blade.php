@@ -18,11 +18,11 @@
 							<!-- <br/> -->
 							<div class="@error('type') is-invalid @enderror">
 								<div class="form-check form-check-inline">
-									<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio1" value="income">
+									<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio1" value="income" @if(old('type') == 'income') checked @endif>
 									<label class="form-check-label btn btn-sm" for="inlineRadio1">Income</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio2" value="expense">
+									<input class="form-check-input btn-check btn-sm @error('type') is-invalid @enderror" type="radio" name="type" id="inlineRadio2" value="expense" @if(old('type') == 'expense') checked @endif>
 									<label class="form-check-label btn btn-sm" for="inlineRadio2">Expense</label>
 								</div>
 							</div>
@@ -33,7 +33,7 @@
 
 						<div class="col-md-6 @error('category_id') has-error @enderror">
 							<label for="category" class="col-form-label">Category</label>
-							<select id="category" name="category_id" class="form-select form-select-sm @error('category_id') is-invalid @enderror" placeholder="Please choose"></select>
+							<select id="category" name="category_id" value="{{ old('category_id' )}}" class="form-select form-select-sm @error('category_id') is-invalid @enderror" placeholder="Please choose"></select>
 							@error('category_id')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
@@ -43,7 +43,7 @@
 					<div class="row mt-3">
 						<div class="col-md-6 @error('date') has-error @enderror">
 							<label for="date" class="col-form-label">Date</label>
-							<input type="text" name="date" id="date" class="form-control form-control-sm @error('date') is-invalid @enderror" placeholder="Date">
+							<input type="text" name="date" value="{{ old('date') }}" id="date" class="form-control form-control-sm @error('date') is-invalid @enderror" placeholder="Date">
 							@error('date')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
@@ -51,7 +51,7 @@
 
 						<div class="col-md-6 @error('amount') has-error @enderror">
 							<label for="amount" class="col-form-label">Amount</label>
-							<input type="number" name="amount" id="amount" class="form-control form-control-sm @error('amount') is-invalid @enderror" min="0" step="any" placeholder="Amount">
+							<input type="number" name="amount" value="{{ old('amount') }}" id="amount" class="form-control form-control-sm @error('amount') is-invalid @enderror" min="0" step="any" placeholder="Amount">
 							@error('amount')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
@@ -61,7 +61,7 @@
 					<div class="row mt-3 @error('description') has-error @enderror">
 						<div class="col-md-12">
 							<label for="description" class="col-form-label">Description (Optional)</label>
-							<textarea id="description" name="description" class="form-control form-control-sm @error('description') is-invalid @enderror" placeholder="Description"></textarea>
+							<textarea id="description" name="description" class="form-control form-control-sm @error('description') is-invalid @enderror" placeholder="Description">{{ old('description') }}</textarea>
 							@error('description')
 								<div class="invalid-feedback">{{ $message }}</div>
 							@enderror
@@ -119,14 +119,6 @@
 
 @section('js')
 ////////////////////////////////////////////////////////////////////////////////////////////
-$('#type').select2({
-	theme: 'bootstrap-5',
-	placeholder: 'Please choose',
-	allowClear: true,
-	closeOnSelect: true,
-	width: '100%',
-});
-
 $('#category').select2({
 	theme: 'bootstrap-5',
 	placeholder: 'Please choose',
@@ -150,6 +142,10 @@ $('#category').select2({
 		}
 	},
 });
+@if(null !== old('category_id'))
+	var newOptionType = new Option('{!! \App\Models\Category::find(old('category_id'))->category !!}', '{{ old('category_id') }}', true, true);
+	$('#category').append(newOptionType).trigger('change');
+@endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 $("#date").jqueryuiDatepicker({
