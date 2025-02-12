@@ -1,9 +1,7 @@
 ## Laravel 11 Module Boilerplate
 
 Integration with packages below :
- - **[filament/filament]**
  - **[laravel/breeze]**
- - **[livewire/livewire]**
  - **[pestphp/pest]**
  - **[pestphp/pest-plugin-laravel]**
 
