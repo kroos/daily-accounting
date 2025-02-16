@@ -8,14 +8,14 @@
 				<h4>Income & Expense Reports</h4>
 			</div>
 			<div class="card-body">
-				<div class="row justify-content-center mb-5">
-					<div class="col-md-6 @error('fromDate') has-error @enderror">
+				<div class="row justify-content-evenly mb-5">
+					<div class="col-3 my-3 @error('fromDate') has-error @enderror">
 						<input type="text" name="fromDate" id="fromDate" class="form-control form-control-sm  @error('fromDate') has-error @enderror" value="{{ old('fromDate', $fromDate) }}" placeholder="From Date">
 						@error('fromDate')
 						<div class="invalid-feedback">{{ $message }}</div>
 						@enderror
 					</div>
-					<div class="col-md-6 @error('toDate') has-error @enderror">
+					<div class="col-3 my-3 @error('toDate') has-error @enderror">
 						<input type="text" name="toDate" id="toDate" class="form-control form-control-sm  @error('toDate') has-error @enderror" value="{{ old('toDate', $toDate) }}" placeholder="To Date">
 						@error('toDate')
 						<div class="invalid-feedback">{{ $message }}</div>
@@ -26,19 +26,25 @@
 				<div class="row my-2 justify-content-center">
 					<div class="col-md-4 text-center">
 						<h5>Income Breakdown</h5>
-						<canvas id="incomeChart"></canvas>
+						<div style="width: 100% !important; min-height: 300px; position: relative;">
+							<canvas id="incomeChart" style="width: 100% !important; height: auto !important;"></canvas>
+						</div>
 					</div>
 					<div class="col-md-4 text-center">
 						<h5>Expense Breakdown</h5>
-						<canvas id="expenseChart"></canvas>
+						<div style="width: 100% !important; min-height: 300px; position: relative;">
+							<canvas id="expenseChart" style="width: 100% !important; height: auto !important;"></canvas>
+						</div>
 					</div>
 					<div class="col-md-4 text-center">
 						<h5>Total Income vs Expenses</h5>
-						<canvas id="totalChart"></canvas>
+						<div style="width: 100% !important; min-height: 300px; position: relative;">
+							<canvas id="totalChart" style="width: 100% !important; height: auto !important;"></canvas>
+						</div>
 					</div>
 				</div>
 
-				<table id="transactionTable" class="table my-2">
+				<table id="transactionTable" class="table my-3" style="width: 100% !important; table-layout: auto !important;">
 					<thead class="table table hover">
 						<tr>
 							<th>Date</th>
@@ -94,9 +100,9 @@ $('#transactionTable').DataTable({
 	],
 	'order': [[ 0, 'desc' ]],
 	'responsive': true,
-	'autoWidth': false,
+	'autoWidth': true,
 	// 'fixedHeader': true,
-	'dom': 'Bfrtip',
+	// 'dom': 'Bfrtip',
 	ajax: {
 		url: route,
 		type: 'POST',
@@ -186,12 +192,31 @@ function updateChart(canvasId, label, data, tableData) {
 			}]
 		},
 		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+
+			// scales: {
+			// 	y: {
+			// 		stacked: true,
+			// 		grid: {
+			// 			display: true,
+			// 			// color: "rgba(255,99,132,0.2)"
+			// 		}
+			// 	},
+			// 	x: {
+			// 		grid: {
+			// 			display: false
+			// 		}
+			// 	}
+			// }
+
 			plugins: {
 				title: {
 					display: true,
 					text: label
 				}
-			}
+			},
+
 		}
 	});
 }
@@ -213,6 +238,24 @@ function updateTotalChart(canvasId, label, totalIncome, totalExpense, incomeColo
 			}]
 		},
 		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+
+			// scales: {
+			// 	y: {
+			// 		stacked: true,
+			// 		grid: {
+			// 			display: true,
+			// 			// color: "rgba(255,99,132,0.2)"
+			// 		}
+			// 	},
+			// 	x: {
+			// 		grid: {
+			// 			display: false
+			// 		}
+			// 	}
+			// }
+
 			plugins: {
 				title: {
 					display: true,

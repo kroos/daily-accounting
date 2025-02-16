@@ -87,6 +87,11 @@
 						</div>
 					</div>
 
+					<div class="col-sm-4 mx-auto my-2">
+						<button type="button" id="start-scanning" class="btn btn-sm btn-primary">Start scanning</button>
+						<pre id="result"></pre>
+					</div>
+
 					<div class="mt-3">
 						<button type="submit" class="btn btn-success">Save Transaction</button>
 					</div>
@@ -172,11 +177,12 @@ $('#scanBarcode').click(function () {
 			readers: ["ean_reader", "ean_8_reader", "code_128_reader"]
 		}
 	}, function (err) {
-		if (!err) {
-			Quagga.start();
-		} else {
-			console.error(err);
+		if (err) {
+			console.error("Quagga initialization failed:", err);
+			return;
 		}
+		console.log("Quagga initialized successfully");
+		Quagga.start();
 	});
 
 	Quagga.onDetected(function (data) {
@@ -185,6 +191,52 @@ $('#scanBarcode').click(function () {
 		$('#scannerModal').modal('hide');
 	});
 });
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// scanbot demo
+// When initializing the SDK, we specify the path to the barcode scanner engine
+
+$(document).ready(function () {
+	async function initializeSDK() {
+		const sdk = await window.ScanbotSDK.initialize({
+			engine: "{{ asset('js/scanbot-web-sdk/bundle/bin/barcode-scanner/') }}/"
+		});
+
+		$("#start-scanning").click(async function () {
+			const config = new window.ScanbotSDK.UI.Config.BarcodeScannerConfiguration();
+			const scanResult = await window.ScanbotSDK.UI.createBarcodeScanner(config);
+
+			if (scanResult?.items?.length > 0) {
+				$("#result").text(
+				`Barcode type: ${scanResult.items[0].type} \n` +
+				`Barcode content: "${scanResult.items[0].text}" \n`
+				);
+			} else {
+				$("#result").text("Scanning aborted by the user");
+			}
+		});
+	}
+
+	initializeSDK();
+});
+
+// const sdk = await ScanbotSDK.initialize({
+// 	engine: "{{ asset('js/scanbot-web-sdk/bundle/bin/barcode-scanner/') }}"
+// });
+// document.getElementById("start-scanning").addEventListener("click", async () => {
+// 	// We create a new default configuration for the barcode scanner
+// 	const config = new ScanbotSDK.UI.Config.BarcodeScannerConfiguration();
+// 	// We create a barcode scanner UI component
+// 	const scanResult = await ScanbotSDK.UI.createBarcodeScanner(config);
+// 	// Once the scanning is done, we display the result
+// 	if (scanResult?.items?.length > 0) {
+// 		document.getElementById("result").innerText =
+// 			`Barcode type: ${scanResult.items[0].type} \n` +
+// 			`Barcode content: "${scanResult.items[0].text}" \n`;
+// 	} else {
+// 		document.getElementById("result").innerText = "Scanning aborted by the user";
+// 	}
+// });
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // $('#form1').submit(function (e) {
@@ -223,7 +275,6 @@ $('#scanBarcode').click(function () {
 // 	});
 // });
 
-////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 @endsection
