@@ -63,8 +63,8 @@ $currentYear = Carbon::now()->year;
 </body>
 <script type="javascript" src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 <script type="javascript" src="{{ asset('js/ckeditor/adapters/jquery.js') }}"></script>
-<script src="{{ asset('js/scanbot-web-sdk/bundle/ScanbotSDK.ui2.min.js') }}">
-</script>
+<!-- <script src="{{ asset('js/scanbot-web-sdk/bundle/ScanbotSDK.ui2.min.js') }}"> -->
+<!-- </script> -->
 <script type="module">
 	jQuery.noConflict ();
 	(function($){
