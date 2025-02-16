@@ -88,8 +88,22 @@
 				</div>
 
 				<div class="col-sm-4 mx-auto my-2">
-					<button type="button" id="start-scanning" class="btn btn-sm btn-primary">Start scanning</button>
-					<pre id="result"></pre>
+					<!-- <button type="button" id="start-scanning" class="btn btn-sm btn-primary">Start scanning</button> -->
+					<button type="button" class="btn btn-sm btn-primary" id="startButton">Start</button>
+					<button type="button" class="btn btn-sm btn-primary" id="resetButton">Reset</button>
+					<!-- <video id="scannerCam" width="100%" height="300"></video> -->
+					<video id="video" width="100%" height="200" style="border: 1px solid gray"></video>
+					<!-- <pre id="result"></pre> -->
+
+					<div id="sourceSelectPanel" style="display:none">
+						<label for="sourceSelect">Change video source:</label>
+						<select id="sourceSelect" style="max-width:400px">
+						</select>
+					</div>
+
+					<label>Result:</label>
+					<pre><code id="result"></code></pre>
+
 				</div>
 
 				<div class="mt-3">
@@ -120,7 +134,8 @@
 
 </div>
 <!-- <script src=" https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js "></script> -->
-<script src="https://unpkg.com/@zxing/browser"></script>
+<!-- <script src="https://unpkg.com/@zxing/browser"></script> -->
+<script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
 <!-- <script src="https://unpkg.com/@zxing/library"></script> -->
 <!-- <script src="https://unpkg.com/@zxing/browser@latest"></script> -->
 <!-- <script src="https://unpkg.com/@zxing/library@latest"></script> -->
@@ -163,53 +178,106 @@ $("#date").jqueryuiDatepicker({
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-document.addEventListener("DOMContentLoaded", function () {
-	let codeReader = new ZXing.BrowserMultiFormatReader();
-	let selectedDeviceId = null;
+window.addEventListener('load', function () {
+	let selectedDeviceId;
+	const codeReader = new ZXing.BrowserMultiFormatReader()
+	console.log('ZXing code reader initialized')
+	codeReader.listVideoInputDevices()
+	.then((videoInputDevices) => {
+		const sourceSelect = document.getElementById('sourceSelect')
+		selectedDeviceId = videoInputDevices[0].deviceId
+		if (videoInputDevices.length >= 1) {
+			videoInputDevices.forEach((element) => {
+				const sourceOption = document.createElement('option')
+				sourceOption.text = element.label
+				sourceOption.value = element.deviceId
+				sourceSelect.appendChild(sourceOption)
+			})
 
-	// Get elements
-	const scanBarcodeBtn = document.getElementById("scanBarcode");
-	const barcodeInput = document.getElementById("barcode");
-	const scannerCamera = document.getElementById("scannerCamera");
-	const modalElement = document.getElementById("scanbarcde");
+			sourceSelect.onchange = () => {
+				selectedDeviceId = sourceSelect.value;
+			};
 
-	// Start scanning when clicking "Scan Barcode"
-	scanBarcodeBtn.addEventListener("click", function () {
-		codeReader.getVideoInputDevices().then((videoInputDevices) => {
-			if (videoInputDevices.length > 0) {
-				selectedDeviceId = videoInputDevices[0].deviceId;
-				startScanner();
-			} else {
-				alert("No camera found!");
-			}
-		}).catch((err) => {
-			console.error("Camera error:", err);
-		});
-	});
-
-	function startScanner() {
-		codeReader.decodeFromVideoDevice(selectedDeviceId, scannerCamera, (result, err) => {
-			if (result) {
-				barcodeInput.value = result.text; // Fill barcode input
-				console.log("Scanned Barcode:", result.text);
-				closeModal(); // Close modal
-			}
-		});
-	}
-
-	// Stop scanning when modal closes
-	modalElement.addEventListener("hidden.bs.modal", function () {
-		codeReader.reset();
-	});
-
-	function closeModal() {
-		let modal = document.querySelector(".modal.show");
-		if (modal) {
-			let closeBtn = modal.querySelector("[data-bs-dismiss='modal']");
-			closeBtn.click();
+			const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+			sourceSelectPanel.style.display = 'block'
 		}
-	}
-});
+
+		document.getElementById('startButton').addEventListener('click', () => {
+			codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+				if (result) {
+					console.log(result)
+					document.getElementById('result').textContent = result.text
+				}
+				if (err && !(err instanceof ZXing.NotFoundException)) {
+					console.error(err)
+					document.getElementById('result').textContent = err
+				}
+			})
+			console.log(`Started continous decode from camera with id ${selectedDeviceId}`)
+		})
+
+		document.getElementById('resetButton').addEventListener('click', () => {
+			codeReader.reset()
+			document.getElementById('result').textContent = '';
+			console.log('Reset.')
+		})
+
+	})
+	.catch((err) => {
+		console.error(err)
+	})
+})
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// document.addEventListener("DOMContentLoaded", function () {
+// 	let codeReader = new ZXing.BrowserMultiFormatReader();
+// 	let selectedDeviceId = null;
+//
+// 	// Get elements
+// 	// const scanBarcodeBtn = document.getElementById("scanBarcode");
+// 	const scanBarcodeBtn = document.getElementById("start-scanning");
+// 	const barcodeInput = document.getElementById("barcode");
+// 	// const scannerCamera = document.getElementById("scannerCamera");
+// 	const scannerCamera = document.getElementById("scannerCam");
+// 	const modalElement = document.getElementById("scanbarcde");
+//
+// 	// Start scanning when clicking "Scan Barcode"
+// 	scanBarcodeBtn.addEventListener("click", function () {
+// 		codeReader.getVideoInputDevices().then((videoInputDevices) => {
+// 			if (videoInputDevices.length > 0) {
+// 				selectedDeviceId = videoInputDevices[0].deviceId;
+// 				startScanner();
+// 			} else {
+// 				alert("No camera found!");
+// 			}
+// 		}).catch((err) => {
+// 			console.error("Camera error:", err);
+// 		});
+// 	});
+//
+// 	function startScanner() {
+// 		codeReader.decodeFromVideoDevice(selectedDeviceId, scannerCamera, (result, err) => {
+// 			if (result) {
+// 				barcodeInput.value = result.text; // Fill barcode input
+// 				console.log("Scanned Barcode:", result.text);
+// 				closeModal(); // Close modal
+// 			}
+// 		});
+// 	}
+//
+// 	// Stop scanning when modal closes
+// 	modalElement.addEventListener("hidden.bs.modal", function () {
+// 		codeReader.reset();
+// 	});
+//
+// 	function closeModal() {
+// 		let modal = document.querySelector(".modal.show");
+// 		if (modal) {
+// 			let closeBtn = modal.querySelector("[data-bs-dismiss='modal']");
+// 			closeBtn.click();
+// 		}
+// 	}
+// });
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // 	$(document).ready(function () {
