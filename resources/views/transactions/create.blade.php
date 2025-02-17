@@ -164,25 +164,35 @@ let isScanning = false;
 // Function to start scanning
 function startScanner() {
 	if (!isScanning) {
-		scanner.start(
-		{ facingMode: "environment" }, // Use back camera
-		{ fps: 10, qrbox: 250 },
-		(decodedText) => {
-			$("#barcode").val(decodedText); // Set barcode value
-			$("#scanbarcde").modal("hide"); // Close modal
-			stopScanner(); // Stop scanning
-		},
-		(errorMessage) => {
-			console.warn("Scanning error:", errorMessage);
-		}
-		).then(() => {
-			isScanning = true;
-		}).catch((err) => {
-			console.error("Scanner initialization failed:", err);
-			swal.fire('Error', "Error: " + err.message + "<br />Please check your camera settings.", 'error');
+		// Request camera access
+		navigator.mediaDevices.getUserMedia({ video: true })
+		.then((stream) => {
+			// Camera access granted ✅
+			scanner.start(
+			{ facingMode: "environment" }, // Use back camera
+			{ fps: 10, qrbox: 250 },
+			(decodedText) => {
+				$("#barcode").val(decodedText); // Set barcode value
+				$("#scanbarcde").modal("hide"); // Close modal
+				stopScanner(); // Stop scanning
+			},
+			(errorMessage) => {
+				console.warn("Scanning error:", errorMessage);
+			}
+			).then(() => {
+				isScanning = true;
+			}).catch((err) => {
+				console.error("Scanner initialization failed:", err);
+			});
+		})
+		.catch((err) => {
+			// Camera permission denied ❌
+			console.error("Camera permission error:", err);
+			alert("Camera access is required for barcode scanning. Please enable it in your browser settings.");
 		});
 	}
 }
+
 
 // Function to stop scanner
 function stopScanner() {
