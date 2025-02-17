@@ -188,11 +188,10 @@ function startScanner() {
 		.catch((err) => {
 			// Camera permission denied ❌
 			console.error("Camera permission error:", err);
-			alert("Camera access is required for barcode scanning. Please enable it in your browser settings.");
+			swal.fire('Error :', "Camera access is required for barcode scanning. Please enable it in your browser settings.", 'error');
 		});
 	}
 }
-
 
 // Function to stop scanner
 function stopScanner() {
