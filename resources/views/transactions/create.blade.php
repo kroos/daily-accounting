@@ -165,11 +165,8 @@ let isScanning = false;
 function startScanner() {
 	if (!isScanning) {
 		scanner.start(
-		{ facingMode: "environment" }, // Use the back camera
-		{
-			fps: 10,    // Frames per second
-			qrbox: 250  // Size of the scanning box
-		},
+		{ facingMode: "environment" }, // Use back camera
+		{ fps: 10, qrbox: 250 },
 		(decodedText) => {
 			$("#barcode").val(decodedText); // Set barcode value
 			$("#scanbarcde").modal("hide"); // Close modal
@@ -182,6 +179,7 @@ function startScanner() {
 			isScanning = true;
 		}).catch((err) => {
 			console.error("Scanner initialization failed:", err);
+			swal.fire('Error', "Error: " + err.message + "<br />Please check your camera settings.", 'error');
 		});
 	}
 }
