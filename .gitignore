@@ -24,3 +24,4 @@ yarn-error.log
 /public/js/filament
 /public/css/filament
 /.phpintel
+/public/js/scanbot-web-sdk
