@@ -46,12 +46,14 @@ class CategoryAjaxController extends Controller
 	{
 		// dd($request->all());
 		// Fetch subcategories with optional search
-		$values = Category::where('user_id', \Auth::user()->belongstouser->id)
-							->orWhereNull('user_id')
-							->when($request->search, function ($query) use ($request) {
+		$values = Category::where(function(Builder $query){
+								$query->where('user_id', \Auth::user()->belongstouser->id)
+								->orWhereNull('user_id');
+							})
+							->when($request->search, function (Builder $query) use ($request) {
 								$query->where('category', 'LIKE', '%' . $request->search . '%');
 							})
-							->when($request->type, function ($query) use ($request){
+							->when($request->type, function (Builder $query) use ($request){
 								$query->where('type', $request->type);
 							})
 							// ->ddrawsql();
