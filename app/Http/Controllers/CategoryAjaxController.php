@@ -46,7 +46,9 @@ class CategoryAjaxController extends Controller
 	{
 		// dd($request->all());
 		// Fetch subcategories with optional search
-		$values = Category::when($request->search, function ($query) use ($request) {
+		$values = Category::where('user_id', \Auth::user()->belongstouser->id)
+							->orWhereNull('user_id')
+							->when($request->search, function ($query) use ($request) {
 								$query->where('category', 'LIKE', '%' . $request->search . '%');
 							})
 							->when($request->type, function ($query) use ($request){
@@ -66,7 +68,12 @@ class CategoryAjaxController extends Controller
 
 	public function listcategories(): JsonResponse
 	{
-		$categories = Category::orderBy('type', 'desc')->get();
+		$categories = Category::where(function(Builder $query){
+			$query->where('user_id', \Auth::user()->belongstouser->id)
+			->orWhereNull('user_id');
+		})
+		->orderBy('type', 'desc')
+		->get();
 		return response()->json(['table' => $categories]);
 	}
 }

@@ -13,6 +13,8 @@ return new class extends Migration
 	{
 		Schema::create('categories', function (Blueprint $table) {
 			$table->id();
+			// $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link transactions to a user
+			$table->integer('user_id')->nullable();
 			$table->string('category')->unique();
 			$table->enum('type', ['income', 'expense']);
 			$table->string('color')->nullable();
@@ -22,26 +24,26 @@ return new class extends Migration
 
 		// Insert predefined categories
 		DB::table('categories')->insert([
-			['category' => 'Salary', 'type' => 'income', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Business Revenue', 'type' => 'income', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Food & Groceries', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Rent / Mortgage', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Utilities', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Transportation', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Debt Repayments', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Dining Out & Coffee', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Clothing & Accessories', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Health & Personal Care', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Entertainment & Leisure', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Tobacco', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Children’s Education', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Elderly Support', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Gifts & Celebrations', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Emergency Fund', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Investments', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Pet Expenses', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Home Maintenance', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
-			['category' => 'Charity & Donations', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Salary', 'type' => 'income', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Business Revenue', 'type' => 'income', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Food & Groceries', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Rent / Mortgage', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Utilities', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Transportation', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Debt Repayments', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Dining Out & Coffee', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Clothing & Accessories', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Health & Personal Care', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Entertainment & Leisure', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Tobacco', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Children’s Education', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Elderly Support', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Gifts & Celebrations', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Emergency Fund', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Investments', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Pet Expenses', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Home Maintenance', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
+			['user_id' => NULL, 'category' => 'Charity & Donations', 'type' => 'expense', 'color' => null, 'created_at' => now(), 'updated_at' => now()],
 		]);
 	}
 

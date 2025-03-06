@@ -228,12 +228,14 @@ function updateTotalChart(canvasId, label, totalIncome, totalExpense, incomeColo
 		chartInstances[canvasId].destroy();
 	}
 
+	let totalBalance = totalIncome-totalExpense;
+
 	chartInstances[canvasId] = new Chart(ctx, {
 		type: 'pie',
 		data: {
 			labels: ['Total Income', 'Total Expenses'],
 			datasets: [{
-				data: [totalIncome, totalExpense],
+				data: [totalBalance, totalExpense],
 				backgroundColor: [incomeColor, expenseColor] // Different colors for Income & Expense
 			}]
 		},

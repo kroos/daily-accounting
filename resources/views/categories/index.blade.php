@@ -62,13 +62,16 @@ $('#categories').DataTable({
 			}
 		},
 		{
-			data: 'id',
+			data: null, // Use null to access the whole row data
 			render: function(data){
-				return `
-					<div class="m-0">
-						<a href="categories/${data}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
-					</div>
-					`;
+				if(data.user_id !== null){
+					return `
+						<div class="m-0">
+							<a href="categories/${data.id}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
+						</div>
+						`;
+				}
+				return ''; // Return an empty string if user_id is null
 			}
 		}
 	],
