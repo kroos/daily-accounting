@@ -185,7 +185,7 @@ function updateChart(canvasId, label, data, tableData) {
 	chartInstances[canvasId] = new Chart(ctx, {
 		type: 'pie',
 		data: {
-			labels: Object.keys(data),
+			// labels: Object.keys(data),
 			datasets: [{
 				data: Object.values(data),
 				backgroundColor: colors,
