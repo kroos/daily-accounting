@@ -80,246 +80,246 @@ $('#toDate').jqueryuiDatepicker({
 	updateTable();
 });
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// variables
-let route = '{{ route('ajax.reports') }}';
-let incomeChart = $('#incomeChart');
-let expenseChart = $('#expenseChart');
-let totalChart = $('#totalChart');
+$.get('/sanctum/csrf-cookie').done(function () {
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// variables
+	let route = '{{ route('ajax.reports') }}';
+	let incomeChart = $('#incomeChart');
+	let expenseChart = $('#expenseChart');
+	let totalChart = $('#totalChart');
 
-// Define consistent colors
-const incomeColor = '#36A2EB';  // Blue
-const expenseColor = '#FF6384'; // Red
-let chartInstances = {}; // Declare globally
+	// Define consistent colors
+	const incomeColor = '#36A2EB';  // Blue
+	const expenseColor = '#FF6384'; // Red
+	let chartInstances = {}; // Declare globally
 
-
-$('#transactionTable').DataTable({
-	'lengthMenu': [ [30, 60, 100, -1], [30, 60, 100, 'All'] ],
-	'columnDefs': [
-		{ type: 'date', 'targets': [4] },
-	],
-	'order': [[ 0, 'desc' ]],
-	'responsive': true,
-	'autoWidth': true,
-	// 'fixedHeader': true,
-	// 'dom': 'Bfrtip',
-	ajax: {
-		url: route,
-		type: 'POST',
-		data: function(da){
-				da._token = '{!! csrf_token() !!}';
-				da.fromDate = $('#fromDate').val();
-				da.toDate = $('#toDate').val();
+	$('#transactionTable').DataTable({
+		'lengthMenu': [ [30, 60, 100, -1], [30, 60, 100, 'All'] ],
+		'columnDefs': [
+			{ type: 'date', 'targets': [4] },
+		],
+		'order': [[ 0, 'desc' ]],
+		'responsive': true,
+		'autoWidth': true,
+		// 'fixedHeader': true,
+		// 'dom': 'Bfrtip',
+		ajax: {
+			url: route,
+			type: 'POST',
+			data: function(da){
+					da._token = '{!! csrf_token() !!}';
+					da.fromDate = $('#fromDate').val();
+					da.toDate = $('#toDate').val();
+			},
+			dataSrc: 'table',
 		},
-		dataSrc: 'table',
-	},
-	'columns': [
-		{
-			data: 'date',
-			render: function(data) {
-				return moment(data).format('D MMM YYYY');
-			}
-		},
-		{
-			data: 'type',
-			render: function(data) {
-				return data.charAt(0).toUpperCase() + data.slice(1); // Capitalize the first letter
-			}
-		},
-		{ data: 'belongstocategory.category' },
-		{
-			data: 'amount',
-			render: function(data) {
-				return 'RM' + parseFloat(data).toFixed(2); // Format amount as decimal
-			}
-		},
-		{ data: 'description' },
-		{
-			data: 'id',
-			render: function(data){
-				return `
-					<div class="m-0">
-						<a href="transactions/${data}" class=""><i class="fa-regular fa-file-pdf"></i></a>
-						<a href="transactions/${data}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
-						<a class="text-danger delete" data-id="${data}"><i class="fa-solid fa-trash-can"></i></a>
-					</div>
-					`
-			}
-		}
-	],
-	initComplete: function(settings, response) {
-		// console.log(response); // This runs after successful loading
-	}
-});
-
-$('#transactionTable').on('xhr.dt', function(e, settings, response) {
-	console.log("Data Refreshed:");
-	console.log(response); // `response` contains the latest response data
-	if(response) {
-		updateChart('incomeChart', 'Income Breakdown', response.incomeData, response.table);
-		updateChart('expenseChart', 'Expense Breakdown', response.expenseData, response.table);
-		updateTotalChart('totalChart', 'Total Income vs Expenses', response.totalIncome, response.totalExpense, incomeColor, expenseColor);
-	}
-});
-
-function updateTable() {
-	$('#transactionTable').DataTable().ajax.reload();
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Update Chart
-
-function updateChart(canvasId, label, data, tableData) {
-	const ctx = document.getElementById(canvasId);
-
-	if (chartInstances[canvasId]) {
-		chartInstances[canvasId].destroy();
-	}
-
-	// Get colors dynamically based on categories
-	let colors = Object.keys(data).map(category => {
-		let item = tableData.find(entry => entry.belongstocategory.category === category);
-		return item ? item.belongstocategory.color : '#000000'; // Default to black if not found
-	});
-
-	chartInstances[canvasId] = new Chart(ctx, {
-		type: 'pie',
-		data: {
-			// labels: Object.keys(data),
-			datasets: [{
-				data: Object.values(data),
-				backgroundColor: colors,
-			}]
-		},
-		options: {
-			responsive: true,
-			maintainAspectRatio: false,
-
-			// scales: {
-			// 	y: {
-			// 		stacked: true,
-			// 		grid: {
-			// 			display: true,
-			// 			// color: "rgba(255,99,132,0.2)"
-			// 		}
-			// 	},
-			// 	x: {
-			// 		grid: {
-			// 			display: false
-			// 		}
-			// 	}
-			// }
-
-			plugins: {
-				title: {
-					display: true,
-					text: label
+		'columns': [
+			{
+				data: 'date',
+				render: function(data) {
+					return moment(data).format('D MMM YYYY');
 				}
 			},
-
-		}
-	});
-}
-
-function updateTotalChart(canvasId, label, totalIncome, totalExpense, incomeColor, expenseColor) {
-	const ctx = document.getElementById(canvasId);
-
-	if (chartInstances[canvasId]) {
-		chartInstances[canvasId].destroy();
-	}
-
-	let totalBalance = totalIncome-totalExpense;
-
-	chartInstances[canvasId] = new Chart(ctx, {
-		type: 'pie',
-		data: {
-			labels: ['Total Income', 'Total Expenses'],
-			datasets: [{
-				data: [totalBalance, totalExpense],
-				backgroundColor: [incomeColor, expenseColor] // Different colors for Income & Expense
-			}]
-		},
-		options: {
-			responsive: true,
-			maintainAspectRatio: false,
-
-			// scales: {
-			// 	y: {
-			// 		stacked: true,
-			// 		grid: {
-			// 			display: true,
-			// 			// color: "rgba(255,99,132,0.2)"
-			// 		}
-			// 	},
-			// 	x: {
-			// 		grid: {
-			// 			display: false
-			// 		}
-			// 	}
-			// }
-
-			plugins: {
-				title: {
-					display: true,
-					text: label
+			{
+				data: 'type',
+				render: function(data) {
+					return data.charAt(0).toUpperCase() + data.slice(1); // Capitalize the first letter
+				}
+			},
+			{ data: 'belongstocategory.category' },
+			{
+				data: 'amount',
+				render: function(data) {
+					return 'RM' + parseFloat(data).toFixed(2); // Format amount as decimal
+				}
+			},
+			{ data: 'description' },
+			{
+				data: 'id',
+				render: function(data){
+					return `
+						<div class="m-0">
+							<a href="transactions/${data}" class=""><i class="fa-regular fa-file-pdf"></i></a>
+							<a href="transactions/${data}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
+							<a class="text-danger delete" data-id="${data}"><i class="fa-solid fa-trash-can"></i></a>
+						</div>
+						`
 				}
 			}
+		],
+		initComplete: function(settings, response) {
+			// console.log(response); // This runs after successful loading
 		}
 	});
-}
 
-updateTable();
+	$('#transactionTable').on('xhr.dt', function(e, settings, response) {
+		console.log("Data Refreshed:");
+		console.log(response); // `response` contains the latest response data
+		if(response) {
+			updateChart('incomeChart', 'Income Breakdown', response.incomeData, response.table);
+			updateChart('expenseChart', 'Expense Breakdown', response.expenseData, response.table);
+			updateTotalChart('totalChart', 'Total Income vs Expenses', response.totalIncome, response.totalExpense, incomeColor, expenseColor);
+		}
+	});
 
-////////////////////////////////////////////////////////////////////////////////////////////
-$(document).on('click', '.delete', function(e){
-	var ackID = $(this).data('id');
-	var ackTable = $(this).data('table');
-	SwalDelete(ackID, ackTable);
-	e.preventDefault();
+	function updateTable() {
+		$('#transactionTable').DataTable().ajax.reload();
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Update Chart
+
+	function updateChart(canvasId, label, data, tableData) {
+		const ctx = document.getElementById(canvasId);
+
+		if (chartInstances[canvasId]) {
+			chartInstances[canvasId].destroy();
+		}
+
+		// Get colors dynamically based on categories
+		let colors = Object.keys(data).map(category => {
+			let item = tableData.find(entry => entry.belongstocategory.category === category);
+			return item ? item.belongstocategory.color : '#000000'; // Default to black if not found
+		});
+
+		chartInstances[canvasId] = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				// labels: Object.keys(data),
+				datasets: [{
+					data: Object.values(data),
+					backgroundColor: colors,
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+
+				// scales: {
+				// 	y: {
+				// 		stacked: true,
+				// 		grid: {
+				// 			display: true,
+				// 			// color: "rgba(255,99,132,0.2)"
+				// 		}
+				// 	},
+				// 	x: {
+				// 		grid: {
+				// 			display: false
+				// 		}
+				// 	}
+				// }
+
+				plugins: {
+					title: {
+						display: true,
+						text: label
+					}
+				},
+
+			}
+		});
+	}
+
+	function updateTotalChart(canvasId, label, totalIncome, totalExpense, incomeColor, expenseColor) {
+		const ctx = document.getElementById(canvasId);
+
+		if (chartInstances[canvasId]) {
+			chartInstances[canvasId].destroy();
+		}
+
+		let totalBalance = totalIncome-totalExpense;
+
+		chartInstances[canvasId] = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				labels: ['Total Income', 'Total Expenses'],
+				datasets: [{
+					data: [totalBalance, totalExpense],
+					backgroundColor: [incomeColor, expenseColor] // Different colors for Income & Expense
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+
+				// scales: {
+				// 	y: {
+				// 		stacked: true,
+				// 		grid: {
+				// 			display: true,
+				// 			// color: "rgba(255,99,132,0.2)"
+				// 		}
+				// 	},
+				// 	x: {
+				// 		grid: {
+				// 			display: false
+				// 		}
+				// 	}
+				// }
+
+				plugins: {
+					title: {
+						display: true,
+						text: label
+					}
+				}
+			}
+		});
+	}
+
+	updateTable();
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	$(document).on('click', '.delete', function(e){
+		var ackID = $(this).data('id');
+		var ackTable = $(this).data('table');
+		SwalDelete(ackID, ackTable);
+		e.preventDefault();
+	});
+
+	function SwalDelete(ackID, ackTable){
+		swal.fire({
+			title: 'Delete Transaction',
+			text: 'Are you sure to delete this transaction?',
+			icon: 'info',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			cancelButtonText: 'Cancel',
+			confirmButtonText: 'Yes',
+			showLoaderOnConfirm: true,
+
+			preConfirm: function() {
+				return new Promise(function(resolve) {
+					$.ajax({
+						url: '{{ url('transactions') }}' + '/' + ackID,
+						type: 'DELETE',
+						dataType: 'json',
+						data: {
+							id: ackID,
+							_token : $('meta[name=csrf-token]').attr('content')
+						},
+					})
+					.done(function(response){
+						swal.fire('Accept', response.message, response.status)
+						.then(function(){
+							window.location.reload(true);
+						});
+					})
+					.fail(function(){
+						swal.fire('Oops...', 'Something went wrong with ajax!', 'error');
+					})
+				});
+			},
+			allowOutsideClick: false
+		})
+		.then((result) => {
+			if (result.dismiss === swal.DismissReason.cancel) {
+				swal.fire('Cancel Action', '', 'info')
+			}
+		});
+	}
 });
-
-function SwalDelete(ackID, ackTable){
-	swal.fire({
-		title: 'Delete Transaction',
-		text: 'Are you sure to delete this transaction?',
-		icon: 'info',
-		showCancelButton: true,
-		confirmButtonColor: '#3085d6',
-		cancelButtonColor: '#d33',
-		cancelButtonText: 'Cancel',
-		confirmButtonText: 'Yes',
-		showLoaderOnConfirm: true,
-
-		preConfirm: function() {
-			return new Promise(function(resolve) {
-				$.ajax({
-					url: '{{ url('transactions') }}' + '/' + ackID,
-					type: 'DELETE',
-					dataType: 'json',
-					data: {
-						id: ackID,
-						_token : $('meta[name=csrf-token]').attr('content')
-					},
-				})
-				.done(function(response){
-					swal.fire('Accept', response.message, response.status)
-					.then(function(){
-						window.location.reload(true);
-					});
-				})
-				.fail(function(){
-					swal.fire('Oops...', 'Something went wrong with ajax!', 'error');
-				})
-			});
-		},
-		allowOutsideClick: false
-	})
-	.then((result) => {
-		if (result.dismiss === swal.DismissReason.cancel) {
-			swal.fire('Cancel Action', '', 'info')
-		}
-	});
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 @endsection

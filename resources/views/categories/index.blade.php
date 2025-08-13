@@ -23,64 +23,66 @@
 @endsection
 
 @section('js')
-////////////////////////////////////////////////////////////////////////////////////////////
-// table
-$('#categories').DataTable({
-	'lengthMenu': [ [30, 60, 100, -1], [30, 60, 100, 'All'] ],
-	// 'columnDefs': [
-	// 	{ type: 'date', 'targets': [4] },
-	// ],
-	'order': [[ 1, 'desc' ]],
-	'responsive': true,
-	'autoWidth': false,
-	// 'fixedHeader': true,
-	'dom': 'Bfrtip',
-	ajax: {
-		url: '{{ route('ajax.listcategories') }}',
-		type: 'GET',
-		data: function(da){
-				da._token = '{!! csrf_token() !!}';
-				da.fromDate = $('#fromDate').val();
-				da.toDate = $('#toDate').val();
+$.get('/sanctum/csrf-cookie').done(function () {
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// table
+	$('#categories').DataTable({
+		'lengthMenu': [ [30, 60, 100, -1], [30, 60, 100, 'All'] ],
+		// 'columnDefs': [
+		// 	{ type: 'date', 'targets': [4] },
+		// ],
+		'order': [[ 1, 'desc' ]],
+		'responsive': true,
+		'autoWidth': false,
+		// 'fixedHeader': true,
+		'dom': 'Bfrtip',
+		ajax: {
+			url: '{{ route('ajax.listcategories') }}',
+			type: 'GET',
+			data: function(da){
+					da._token = '{!! csrf_token() !!}';
+					da.fromDate = $('#fromDate').val();
+					da.toDate = $('#toDate').val();
+			},
+			dataSrc: 'table',
 		},
-		dataSrc: 'table',
-	},
-	'columns': [
-		{
-			data: 'category'
-		},
-		{
-			data: 'type',
-			render: function(data) {
-				return data.charAt(0).toUpperCase() + data.slice(1); // Capitalize the first letter
-			}
-		},
-		{
-			data: 'color',
-			render: function(data){
-				return `<div style="background-color: ${data}; width: 25px; height: 25px;"></div>`
-			}
-		},
-		{
-			data: null, // Use null to access the whole row data
-			render: function(data){
-				if(data.user_id !== null){
-					return `
-						<div class="m-0">
-							<a href="categories/${data.id}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
-						</div>
-						`;
+		'columns': [
+			{
+				data: 'category'
+			},
+			{
+				data: 'type',
+				render: function(data) {
+					return data.charAt(0).toUpperCase() + data.slice(1); // Capitalize the first letter
 				}
-				return ''; // Return an empty string if user_id is null
+			},
+			{
+				data: 'color',
+				render: function(data){
+					return `<div style="background-color: ${data}; width: 25px; height: 25px;"></div>`
+				}
+			},
+			{
+				data: null, // Use null to access the whole row data
+				render: function(data){
+					if(data.user_id !== null){
+						return `
+							<div class="m-0">
+								<a href="categories/${data.id}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
+							</div>
+							`;
+					}
+					return ''; // Return an empty string if user_id is null
+				}
 			}
+		],
+		initComplete: function(settings, response) {
+			// console.log(response); // This runs after successful loading
 		}
-	],
-	initComplete: function(settings, response) {
-		// console.log(response); // This runs after successful loading
-	}
+	});
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 });
-
-////////////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////////////////
 @endsection

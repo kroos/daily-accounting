@@ -13,6 +13,7 @@ $currentYear = Carbon::now()->year;
 	<meta name="keywords" content="" />
 	<!-- CSRF Token -->
 	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<meta name="api-token" content="{{-- \Auth::user()->currentAccessToken()->plainTextToken --}}">
 
 	<!-- <title>Laravel11 Boilerplate</title> -->
 	<title>{{ config('app.name', 'Laravel') }}</title>
