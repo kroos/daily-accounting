@@ -13,6 +13,5 @@ Route::middleware('auth')->group(function () {
 	// Route::get('categories/edit', [CategoryAjaxController::class, 'edit'])->name('categories.edit');
 
 	// AJAX Routes
-	Route::post('/ajax/categories/getCategories', [CategoryAjaxController::class, 'getCategories'])->name('ajax.getCategories');
-	Route::get('/ajax/categories/listcategories', [CategoryAjaxController::class, 'listcategories'])->name('ajax.listcategories');
+
 });
