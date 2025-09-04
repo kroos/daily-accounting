@@ -81,6 +81,7 @@ class CategoryController extends Controller
 
 		// Store transaction
 		Category::create([
+			'user_id' => \Auth::user()->belongstouser->id,
 			'type' => $request->type,
 			'category' => $request->category,
 			'color' => $request->color,
