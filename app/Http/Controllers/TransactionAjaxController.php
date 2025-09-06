@@ -55,6 +55,7 @@ class TransactionAjaxController extends Controller
 
 				// Get transactions in date range
 		$transactions = Transaction::with('belongstocategory')
+		->where('user_id', \Auth::user()->user_id)
 		->whereBetween('date', [$fromDate, $toDate])
 		->orderBy('date', 'desc')
 		->get();

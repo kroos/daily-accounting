@@ -1,13 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
-
 
 // for controller output
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Http\Response;
 
 // models
 use App\Models\Transaction;
@@ -53,7 +52,7 @@ class TransactionController extends Controller
 		$toDate = Carbon::now()->endOfMonth()->toDateString();
 
 		$transactions = Transaction::with('belongstocategory')
-			->where('user_id', \Auth::user()->belongstouser->id)
+			->where('user_id', \Auth::user()->user_id)
 			->whereBetween('date', [$fromDate, $toDate])
 			->orderBy('date', 'desc')
 			->get();
@@ -101,7 +100,7 @@ class TransactionController extends Controller
 
 		// Store transaction
 		$transaction = Transaction::create([
-			'user_id' => \Auth::user()->belongstouser->id,
+			'user_id' => \Auth::user()->user_id,
 			'type' => $request->type,
 			'category_id' => $request->category_id,
 			'date' => $request->date,
@@ -120,10 +119,11 @@ class TransactionController extends Controller
 	/**
 	 * Display the specified resource.
 	 */
-	public function show(Transaction $transaction): View
+	public function show(Transaction $transaction): Response
 	{
-		return view('transactions.show', ['transaction' => $transaction]);
-		// Pdf::loadView('email.show', ['email' => $r])->setOption(['dpi' => 120])->save(storage_path('app/public/pdf/').'BTM-ER-'.Carbon::parse($r->created_at)->format('ym').str_pad( $r->id, 3, "0", STR_PAD_LEFT).'.pdf');
+		// return view('transactions.show', ['transaction' => $transaction]);
+		$pdf = Pdf::loadView('transactions.show', ['transaction' => $transaction])->setOption(['dpi' => 120]);
+		return $pdf->stream('DAT-'.Carbon::parse($transaction->created_at)->format('ym').str_pad( $transaction->id, 3, "0", STR_PAD_LEFT).'.pdf');
 	}
 
 	/**

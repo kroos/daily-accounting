@@ -293,7 +293,7 @@ $.get('/sanctum/csrf-cookie').done(function () {
 			preConfirm: function() {
 				return new Promise(function(resolve) {
 					$.ajax({
-						url: '{{ url('transactions') }}' + '/' + ackID,
+						url: '{{ url('api/ajax/transactions/destroy') }}' + '/' + ackID,
 						type: 'DELETE',
 						dataType: 'json',
 						data: {

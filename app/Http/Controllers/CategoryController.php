@@ -80,8 +80,7 @@ class CategoryController extends Controller
 		]);
 
 		// Store transaction
-		Category::create([
-			'user_id' => \Auth::user()->belongstouser->id,
+		\Auth::user()->belongstouser->hasmanycategory()->create([
 			'type' => $request->type,
 			'category' => $request->category,
 			'color' => $request->color,
@@ -137,8 +136,9 @@ class CategoryController extends Controller
 	/**
 	 * Remove the specified resource from storage.
 	 */
-	public function destroy(Category $category): RedirectResponse
+	public function destroy(Category $category): JsonResponse
 	{
-		//
+		$category->delete();
+		return response()->json(['message' => 'Category deleted', 'status' => 'info']);
 	}
 }

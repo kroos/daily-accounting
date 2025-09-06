@@ -56,7 +56,17 @@ class User extends Authenticatable
 	// db relation hasMany/hasOne
 	public function hasmanylogin(): HasMany
 	{
-		return $this->hasMany(Login::class, 'user_id');
+		return $this->hasMany(\App\Models\Login::class, 'user_id');
+	}
+
+	public function hasmanytransaction(): HasMany
+	{
+		return $this->hasMany(\App\Models\Transaction::class, 'user_id');
+	}
+
+	public function hasmanycategory(): HasMany
+	{
+		return $this->hasMany(\App\Models\Category::class, 'user_id');
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////

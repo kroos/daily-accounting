@@ -143,6 +143,21 @@ class Login extends Authenticatable implements MustVerifyEmail
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// all acl will be done here
+	public function isTransactionOwner($id = null) {
+		$tranown = \Auth::user()->user_id;
+		if($tranown == $id) {
+			return true;
+		}
+		return false;
+	}
+
+	public function isCategoryOwner($id = null) {
+		$cateown = \Auth::user()->user_id;
+		if($cateown == $id) {
+			return true;
+		}
+		return false;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 }

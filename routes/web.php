@@ -21,10 +21,8 @@ Route::middleware(['auth', 'password.confirm'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-	Route::resources([
-		'categories' => CategoryController::class,
-		'transactions' => TransactionController::class,
-	]);
+  Route::resource('categories', CategoryController::class)->middlewareFor(['edit', 'update', 'show', 'destroy'], 'cateOwner');
+  Route::resource('transactions', TransactionController::class)->middlewareFor(['edit', 'update', 'show', 'destroy'], 'transOwner');
 });
 
 require __DIR__.'/auth.php';
