@@ -64,23 +64,24 @@
 @endsection
 
 @section('js')
-////////////////////////////////////////////////////////////////////////////////////////////
-// date
-$('#fromDate').jqueryuiDatepicker({
-	dateFormat: 'yy-mm-dd',
-}).on('change', function() {
-	$('#toDate').datepicker('option', 'minDate', this.value);
-	updateTable();
-});
-
-$('#toDate').jqueryuiDatepicker({
-	dateFormat: 'yy-mm-dd',
-}).on('change', function() {
-	$('#fromDate').datepicker('option', 'maxDate', this.value);
-	updateTable();
-});
-
 $.get('/sanctum/csrf-cookie').done(function () {
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// date
+	$('#fromDate').jqueryuiDatepicker({
+		dateFormat: 'yy-mm-dd',
+	}).on('change', function() {
+		$('#toDate').datepicker('option', 'minDate', this.value);
+		updateTable();
+	});
+
+	$('#toDate').jqueryuiDatepicker({
+		dateFormat: 'yy-mm-dd',
+	}).on('change', function() {
+		$('#fromDate').datepicker('option', 'maxDate', this.value);
+		updateTable();
+	});
+
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// variables
 	let route = '{{ route('ajax.reports') }}';
