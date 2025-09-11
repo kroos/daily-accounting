@@ -97,9 +97,12 @@ $.get('/sanctum/csrf-cookie').done(function () {
 	$('#transactionTable').DataTable({
 		'lengthMenu': [ [30, 60, 100, -1], [30, 60, 100, 'All'] ],
 		'columnDefs': [
-			{ type: 'date', 'targets': [4] },
+		{ type: 'date', 'targets': [0] },
 		],
-		'order': [[ 0, 'desc' ]],
+		'order': [
+		[ 0, 'desc' ],
+		[1, 'desc']   // then by type (descending)
+		],
 		'responsive': true,
 		'autoWidth': true,
 		// 'fixedHeader': true,
@@ -108,45 +111,58 @@ $.get('/sanctum/csrf-cookie').done(function () {
 			url: route,
 			type: 'POST',
 			data: function(da){
-					da._token = '{!! csrf_token() !!}';
-					da.fromDate = $('#fromDate').val();
-					da.toDate = $('#toDate').val();
+				da._token = '{!! csrf_token() !!}';
+				da.fromDate = $('#fromDate').val();
+				da.toDate = $('#toDate').val();
 			},
 			dataSrc: 'table',
 		},
 		'columns': [
-			{
-				data: 'date',
-				render: function(data) {
-					return moment(data).format('D MMM YYYY');
-				}
-			},
-			{
-				data: 'type',
-				render: function(data) {
-					return data.charAt(0).toUpperCase() + data.slice(1); // Capitalize the first letter
-				}
-			},
-			{ data: 'belongstocategory.category' },
-			{
-				data: 'amount',
-				render: function(data) {
-					return 'RM' + parseFloat(data).toFixed(2); // Format amount as decimal
-				}
-			},
-			{ data: 'description' },
-			{
-				data: 'id',
-				render: function(data){
-					return `
-						<div class="m-0">
-							<a href="transactions/${data}" class=""><i class="fa-regular fa-file-pdf"></i></a>
-							<a href="transactions/${data}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
-							<a class="text-danger delete" data-id="${data}"><i class="fa-solid fa-trash-can"></i></a>
-						</div>
-						`
-				}
+		{
+			data: 'date',
+			render: function(data) {
+				return moment(data).format('D MMM YYYY');
 			}
+		},
+		{
+			data: 'type',
+			render: function(data) {
+				return data.charAt(0).toUpperCase() + data.slice(1); // Capitalize the first letter
+			}
+		},
+		{ data: 'belongstocategory.category' },
+		{
+			data: 'amount',
+			render: function (data, type, row) {
+				// Convert to numeric safely (remove commas, RM, etc.)
+				let numeric = parseFloat(String(data).replace(/,/g, '').replace(/[^\d.-]/g, ''));
+
+				if (isNaN(numeric)) numeric = 0;
+
+				if (type === 'sort' || type === 'type' || type === 'filter') {
+					return numeric;
+				}
+
+				// Format with thousands separators and 2 decimals
+				return 'RM' + numeric.toLocaleString('en-MY', {
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 2
+				});
+			}
+		},
+		{ data: 'description' },
+		{
+			data: 'id',
+			render: function(data){
+				return `
+				<div class="m-0">
+					<a href="transactions/${data}" class=""><i class="fa-regular fa-file-pdf"></i></a>
+					<a href="transactions/${data}/edit" class=""><i class="fa-solid fa-pen-to-square"></i></a>
+					<a class="text-danger delete" data-id="${data}"><i class="fa-solid fa-trash-can"></i></a>
+				</div>
+				`
+			}
+		}
 		],
 		initComplete: function(settings, response) {
 			// console.log(response); // This runs after successful loading
