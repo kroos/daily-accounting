@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 // use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-// use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 // helper
@@ -67,6 +67,11 @@ class User extends Authenticatable
 	public function hasmanycategory(): HasMany
 	{
 		return $this->hasMany(\App\Models\Category::class, 'user_id');
+	}
+
+	public function belongstocurrency(): BelongsTo
+	{
+		return $this->BelongsTo(\App\Models\Currency::class, 'currency_id');
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////

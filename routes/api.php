@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryAjaxController;
 use App\Http\Controllers\TransactionAjaxController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CurrencyAjaxController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -15,6 +16,7 @@ use App\Http\Controllers\CategoryController;
 Route::middleware('auth:sanctum')->group(function () {
 	Route::post('/ajax/categories/getCategories', [CategoryAjaxController::class, 'getCategories'])->name('ajax.getCategories');
 	Route::get('/ajax/categories/listcategories', [CategoryAjaxController::class, 'listcategories'])->name('ajax.listcategories');
+	Route::get('/ajax/currencies/listcurrencies', [CurrencyAjaxController::class, 'listcurrencies'])->name('ajax.listcurrencies');
 	Route::post('/ajax/transactions/reports', [TransactionAjaxController::class, 'getTransactions'])->name('ajax.reports');
 	Route::delete('/ajax/categories/destroy/{category}', [CategoryController::class, 'destroy'])->name('ajax.categories.destroy');
 	Route::delete('/ajax/transactions/destroy/{transaction}', [TransactionController::class, 'destroy'])->name('ajax.transactions.destroy');

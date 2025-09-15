@@ -144,7 +144,7 @@ $.get('/sanctum/csrf-cookie').done(function () {
 				}
 
 				// Format with thousands separators and 2 decimals
-				return 'RM' + numeric.toLocaleString('en-MY', {
+				return '{{ \Auth::user()->belongstouser->belongstocurrency->currency_code }} ' + numeric.toLocaleString('en-MY', {
 					minimumFractionDigits: 2,
 					maximumFractionDigits: 2
 				});

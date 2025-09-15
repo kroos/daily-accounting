@@ -16,7 +16,7 @@ return new class extends Migration
 			$table->string('name');
 			$table->string('email')->unique();
 			$table->timestamp('email_verified_at')->nullable();
-			// $table->boolean('active');
+			// $table->integer('currency_id');
 			$table->timestamps();
 			$table->softDeletes('deleted_at', precision: 0);
 		});
