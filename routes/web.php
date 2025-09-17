@@ -25,4 +25,6 @@ Route::middleware('auth')->group(function () {
   Route::resource('transactions', TransactionController::class)->middlewareFor(['edit', 'update', 'show', 'destroy'], 'transOwner');
 });
 
+// Route::get('/ajax/categories/getCategories', [App\Http\Controllers\CategoryAjaxController::class, 'getCategories'])->name('ajax.getCategories');
+
 require __DIR__.'/auth.php';

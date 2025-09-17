@@ -1,13 +1,10 @@
-<IfModule mod_rewrite.c>
+ <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Redirect all requests to the public directory internally
-    RewriteCond %{REQUEST_URI} !^/public/
-    RewriteRule ^(.*)$ public/$1 [L]
+    # Block access to sensitive files & folders
+    RewriteRule ^(vendor|storage|app|bootstrap|config|database|resources|routes|tests|artisan|composer\.(json|lock)|package\.json|vite\.config\.js|webpack.*|phpunit\.xml|\.env)$ - [F,L,NC]
 
-    # Prevent direct access to sensitive files
-    <FilesMatch "\.(env|git|htaccess|htpasswd|xml|json|config|lock|sql|ini|sh)$">
-        Order Allow,Deny
-        Deny from all
-    </FilesMatch>
-</IfModule>
+    # Redirect all other requests to public/
+    RewriteCond %{REQUEST_URI} !^/public
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule

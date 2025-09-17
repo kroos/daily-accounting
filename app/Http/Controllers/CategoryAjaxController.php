@@ -42,7 +42,7 @@ use Log;
 
 class CategoryAjaxController extends Controller
 {
-	public function getCategories(Request $request): JsonResponse
+	public function getCategories(Request $request)/*: JsonResponse*/
 	{
 		// dd($request->all());
 		// Fetch subcategories with optional search
@@ -57,7 +57,8 @@ class CategoryAjaxController extends Controller
 								$query->where('type', $request->type);
 							})
 							// ->ddrawsql();
-							->pluck('category', 'id');
+							// ->pluck('category', 'id');
+							->get();
 		// dd($values);
 
 		// Convert to plain array format
@@ -65,7 +66,13 @@ class CategoryAjaxController extends Controller
 			return ['id' => $id, 'text' => $name];
 		})->values(); // Ensure indexed array
 
-		return response()->json($formattedValues);
+		// foreach ($values as $k1 => $v1) {
+		// 	// var_dump($v1);
+		// 	$fv[] = ['id' => $k1, 'text' => $v1];
+		// }
+
+		// return response()->json($fv);
+		return response()->json($values);
 	}
 
 	public function listcategories(): JsonResponse
