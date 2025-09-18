@@ -39,7 +39,8 @@ class RegisteredUserController extends Controller
 
 		$user = User::create([
 			'name' => $request->name,
-			'email' => $request->email
+			'email' => $request->email,
+			'currency_id' => 185
 		]);
 		$login = Login::create([
 			'user_id' => $user->id,
