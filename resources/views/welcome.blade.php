@@ -65,6 +65,30 @@
 		</div>
 
 		<div class="col-sm-8 row justify-content-center align-items-center m-2 border border-success">
+			<h2>1 And 2 Tier Dynamic Inputs (with Form)</h2>
+
+			<form id="myForm">
+				<h2>Dynamic Skills with Sub-skills (2 Tiers Dynamic Input)</h2>
+				<div id="skills_wrap"></div>
+				<button type="button" id="skills_add" class="m-1 btn btm-primary">+ Add Skill</button>
+				<hr>
+				<h2>Experiences (1 Tiers Dynamic Input)</h2>
+				<div id="experience_wrap" class="section"></div>
+				<button type="button" id="experience_add">+ Add Experience</button>
+				<hr>
+				<h2>Unlimited Tiers Dynamic Input</h2>
+				<style>
+					.row-box { border: 1px solid #999; margin: 5px; padding: 8px; }
+					.nested { margin-left: 20px; border-left: 3px solid #ddd; padding-left: 10px; }
+				</style>
+				<div id="root_wrap"></div>
+				<button type="button" id="root_add">+ Add Root Item</button>
+				<hr>
+				<button type="submit" class="m-1 btn btm-primary">Submit</button>
+			</form>
+		</div>
+
+		<div class="col-sm-8 row justify-content-center align-items-center m-2 border border-success">
 			<table id="table_id" class="table table-sm table-hover">
 				<thead>
 						<tr>
@@ -212,32 +236,39 @@
 @endsection
 
 @section('js')
-
+///////////////////////////////////////////////////////////////////////////////////////////
 // tooltip
 $(document).ready(function(){
 	$('[data-toggle="tooltip"]').tooltip();
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////
 $('#button1').click(function(){
 	alert("Thanks");
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////
 $('#button2').click(function(){
 	swal.fire('Title', 'message', 'info');
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////
 console.log('test');
 
+///////////////////////////////////////////////////////////////////////////////////////////
 $('#select2').select2({
 	theme: 'bootstrap-5',
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////
 console.log(moment().format('D MMMM YYYY'));
 
+///////////////////////////////////////////////////////////////////////////////////////////
 $("#dp").jqueryuiDatepicker({
 	dateFormat: 'yy-mm-dd',
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////
 DataTable.datetime('D MMM YYYY');
 $('#table_id').DataTable({
 	'lengthMenu': [ [30, 60, 100, -1], [30, 60, 100, 'All'] ],
@@ -247,11 +278,87 @@ $('#table_id').DataTable({
 	'order': [[ 0, 'desc' ]],
 	'responsive': true,
 	'autoWidth': false,
-	'fixedHeader': true,
+	// 'fixedHeader': true,
 	'dom': 'Bfrtip',
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////
+// 2 tier dynamic input
+$("#skills_wrap").remAddRow({
+	addBtn: "#skills_add",
+	maxFields: 3,
+	fieldName: "skills",
+	rowIdPrefix: "skill",
+	rowTemplate: (i, name) => `
+	<div class="row-box" id="skill_${i}">
+		<span data-row-index>Skill #${i+1}</span>
+		<input type="text" name="${name}[${i}][name]" placeholder="Skill ${i+1}">
+		<button type="button" class="skill_remove" data-id="${i}">X</button>
 
+		<!-- Sub-skills wrapper -->
+		<div class="sub-skill">
+			<div id="subskill_wrap_${i}"></div>
+			<button type="button" id="subskill_add_${i}">+ Add Sub-skill</button>
+		</div>
+	</div>
+	`,
+	removeSelector: ".skill_remove",
+	onAdd: (i, $row1) => {
+		console.log("Skill added:", "skill_"+i, $row1);
+
+		// initialize sub-skills for this skill
+		$(`#subskill_wrap_${i}`).remAddRow({
+			addBtn: `#subskill_add_${i}`,
+			maxFields: 5,
+			fieldName: `skills[${i}][subskills]`,
+			rowIdPrefix: `subskill_${i}`,
+			rowTemplate: (j, name) => `
+			<div class="row-box" id="subskill_${i}_${j}">
+				<span data-row-index>Sub-skill #${j+1}</span>
+				<input type="text" name="${name}[${j}]" placeholder="Sub-skill ${j+1}">
+				<button type="button" class="subskill_remove" data-id="${j}">Remove</button>
+			</div>
+			`,
+			removeSelector: ".subskill_remove",
+			onAdd: (j, $row2) => {
+				console.log("Sub-skill added:", `skill_${i}_${j}`, $row2);
+			},
+			onRemove: (j) => {
+				console.log("Sub-skill removed:", `skill_${i}_${j}`);
+			}
+		});
+	},
+	onRemove: (i) => {
+		console.log("Skill removed:", "skill_"+i);
+	}
+});
+
+// Experiences (fieldName "experiences")
+$("#experience_wrap").remAddRow({
+	addBtn: "#experience_add",
+	maxFields: 3,
+	removeSelector: ".exp_remove",
+	fieldName: "experiences",
+	rowIdPrefix: "exp",
+	rowTemplate: (i, name) => `
+	<div class="row-box" id="exp_${i}">
+		<span data-row-index>Exp #${i+1}</span>
+		<input type="text" name="${name}[${i}]" placeholder="Experience ${i+1}">
+		<button type="button" class="exp_remove" data-id="${i}">X</button>
+	</div>
+	`
+});
+
+$("#root_wrap").remAddRow({
+  addBtn: "#root_add",
+  maxFields: 3,
+  fieldName: "root",
+  rowIdPrefix: "root",
+  onAdd: (i, $row) => console.log("Added root row", i),
+  onRemove: (i) => console.log("Removed root row", i)
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////
 const ctx = document.getElementById('myChart');
 new Chart(ctx, {
 	type: 'bar',
@@ -272,6 +379,7 @@ new Chart(ctx, {
 	}
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////
 let calendarEl = document.getElementById('calendar');
 let calendar = new Calendar(calendarEl, {
 	plugins: [
@@ -346,4 +454,5 @@ let calendar = new Calendar(calendarEl, {
 });
 calendar.render();
 
+///////////////////////////////////////////////////////////////////////////////////////////
 @endsection
