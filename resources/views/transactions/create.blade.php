@@ -124,6 +124,12 @@
 @section('js')
 $.get('/sanctum/csrf-cookie').done(function () {
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// clear select2 when click on radio button
+	$('input[name="type"]').click(function (){
+		$('#category').val('').trigger('change')
+	});
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	$('#category').select2({
 		theme: 'bootstrap-5',
 		placeholder: 'Please choose',
@@ -143,7 +149,14 @@ $.get('/sanctum/csrf-cookie').done(function () {
 				}
 			},
 			processResults: function (data) {
-				return { results: data }; // Since backend returns a flat array, no need to transform
+				return {
+					results: data.map(function (item) {
+						return {
+							id: item.id,         // Value
+							text: item.category  // Displayed text
+						};
+					})
+				};
 			}
 		},
 	});

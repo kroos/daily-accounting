@@ -120,15 +120,21 @@
 
 @section('js')
 ////////////////////////////////////////////////////////////////////////////////////////////
-$('#category').select2({
-	theme: 'bootstrap-5',
-	placeholder: 'Please choose',
-	allowClear: true,
-	closeOnSelect: true,
-	width: '100%',
-});
-var newOptionType = new Option('{{ $transaction->type }}', '{{ $transaction->type }}', true, true);
-$('#category').append(newOptionType).trigger('change');
+	// clear select2 when click on radio button
+	$('input[name="type"]').click(function (){
+		$('#category').val('').trigger('change')
+	});
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+// $('#category').select2({
+// 	theme: 'bootstrap-5',
+// 	placeholder: 'Please choose',
+// 	allowClear: true,
+// 	closeOnSelect: true,
+// 	width: '100%',
+// });
+// var newOptionType = new Option('{{ $transaction->type }}', '{{ $transaction->type }}', true, true);
+// $('#category').append(newOptionType).trigger('change');
 
 $('#category').select2({
 	theme: 'bootstrap-5',
@@ -149,7 +155,14 @@ $('#category').select2({
 			}
 		},
 		processResults: function (data) {
-			return { results: data }; // Since backend returns a flat array, no need to transform
+			return {
+				results: data.map(function (item) {
+					return {
+						id: item.id,         // Value
+						text: item.category  // Displayed text
+					};
+				})
+			};
 		}
 	},
 });
