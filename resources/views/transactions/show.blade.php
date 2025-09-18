@@ -32,7 +32,7 @@
 			<tbody>
 				<tr>
 					<td>Category : {{ $transaction->belongstocategory->category }}</td>
-					<td>Amount : {{ \Auth::user()->belongstouser->belongstocurrency->currency_code }} {{ $transaction->amount }}</td>
+					<td>Amount : {{ \Auth::user()->belongstouser?->belongstocurrency?->currency_code }} {{ $transaction->amount }}</td>
 				</tr>
 			</tbody>
 			@if($transaction->hasmanyupload()->get()->count() > 0)

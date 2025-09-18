@@ -153,16 +153,71 @@ $.get('/sanctum/csrf-cookie').done(function () {
 					results: data.map(function (item) {
 						return {
 							id: item.id,         // Value
-							text: item.category  // Displayed text
+							text: item.category,  // Displayed text
+							color: item.color // keep color for display
 						};
 					})
 				};
 			}
 		},
+		templateResult: function (data) {
+			if (!data.id) return data.text;
+
+			let $colorBox = $('<span>').css({
+				display: 'inline-block',
+				width: '12px',
+				height: '12px',
+				'margin-right': '6px',
+				'vertical-align': 'middle',
+				'background-color': data.color || '#ccc',
+				'border-radius': '2px'
+			});
+
+			return $('<span>').append($colorBox).append(document.createTextNode(data.text));
+		},
+		templateSelection: function (data) {
+			if (!data.id) return data.text || '';
+
+				// ✅ Ensure we always have a color
+			let color = data.color || (data.element ? $(data.element).data('color') : '#ccc');
+
+			let $colorBox = $('<span>').css({
+				display: 'inline-block',
+				width: '12px',
+				height: '12px',
+				'margin-right': '6px',
+				'vertical-align': 'middle',
+				'background-color': color,
+				'border-radius': '2px'
+			});
+
+			return $('<span>').append($colorBox).append(document.createTextNode(data.text));
+		},
+				// ✅ Store color as data-color attribute for persistence
+		templateSelectionUpdate: function (data, container) {
+			if (data.color) {
+				$(container).attr('data-color', data.color);
+			}
+		}
 	});
 	@if(null !== old('category_id'))
-		var newOptionType = new Option('{!! \App\Models\Category::find(old('category_id'))->category !!}', '{{ old('category_id') }}', true, true);
-		$('#category').append(newOptionType).trigger('change');
+		// var newOptionType = new Option('{!! \App\Models\Category::find(old('category_id'))->category !!}', '{{ old('category_id') }}', true, true);
+		// $('#category').append(newOptionType).trigger('change');
+
+
+
+
+		var newOptionCategory = new Option(
+			'{!! \App\Models\Category::find(old('category_id'))->category !!}',
+			'{{ old('category_id') }}',
+			true,
+			true
+		);
+		// Add the color as a data attribute
+		$(newOptionCategory).attr('data-color', '{!! \App\Models\Category::find(old('category_id'))->category !!}');
+
+		// Append and trigger
+		$('#category').append(newOptionCategory).trigger('change');
 	@endif
 
 	////////////////////////////////////////////////////////////////////////////////////////////
