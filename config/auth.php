@@ -16,7 +16,7 @@ return [
 	'defaults' => [
 		'guard' => env('AUTH_GUARD', 'web'),
 		// 'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
-		'passwords' => env('AUTH_PASSWORD_BROKER', 'logins'),
+		'passwords' => env('AUTH_PASSWORD_BROKER', 'webpassword'),
 	],
 
 	/*
@@ -40,11 +40,11 @@ return [
 		'web' => [
 			'driver' => 'session',
 			// 'provider' => 'users',
-			'provider' => 'logins',
+			'provider' => 'loginProvider',
 		],
 		'api' => [
 			'driver' => 'sanctum',
-			'provider' => 'logins',
+			'provider' => 'loginProvider',
 		],
 	],
 
@@ -70,7 +70,7 @@ return [
 		//     'driver' => 'eloquent',
 		//     'model' => env('AUTH_MODEL', App\Models\User::class),
 		// 'users' => [
-		'logins' => [
+		'loginProvider' => [
 			'driver' => 'loginuserprovider',
 			// 'driver' => 'eloquent',
 			'model' => env('AUTH_MODEL', App\Models\Login::class),
@@ -105,9 +105,9 @@ return [
 	'passwords' => [
 		// 'users' => [
 		// this should be a table name for *logins*
-		'logins' => [
+		'webpassword' => [
 			// 'provider' => 'users',
-			'provider' => 'logins',
+			'provider' => 'loginProvider',
 			'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
 			'expire' => 60,
 			'throttle' => 60,
