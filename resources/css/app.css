@@ -33,17 +33,13 @@
 /* animate.css */
 @import '../../node_modules/animate.css/animate.css';
 
-/*Fonts*/
-@import url('https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap');
-
-/* ////////////////////////////////////////////////////////////////////////////////////////////////// */
-/*conflict between bootstrap and tailwindcss*/
-/*@tailwind base;*/
-/*@tailwind components;*/
-/*@tailwind utilities;*/
+/*bootstarpValidator5*/
+@import 'bootstrapValidator5';
 
 /* ////////////////////////////////////////////////////////////////////////////////////////////////// */
 /*Style*/
+@import url('https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap');
+
 body {
 	font-family: 'Cactus Classical Serif', serif !important;
 /*	font-size: 12px;*/
