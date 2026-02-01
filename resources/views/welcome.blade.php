@@ -284,7 +284,7 @@ $('#table_id').DataTable({
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // 2 tier dynamic input
-$("#skills_wrap").remAddRow({
+$("#skills_wrap").addRemRow({
 	addBtn: "#skills_add",
 	maxFields: 3,
 	fieldName: "skills",
@@ -307,7 +307,7 @@ $("#skills_wrap").remAddRow({
 		console.log("Skill added:", "skill_"+i, $row1);
 
 		// initialize sub-skills for this skill
-		$(`#subskill_wrap_${i}`).remAddRow({
+		$(`#subskill_wrap_${i}`).addRemRow({
 			addBtn: `#subskill_add_${i}`,
 			maxFields: 5,
 			fieldName: `skills[${i}][subskills]`,
@@ -334,7 +334,7 @@ $("#skills_wrap").remAddRow({
 });
 
 // Experiences (fieldName "experiences")
-$("#experience_wrap").remAddRow({
+$("#experience_wrap").addRemRow({
 	addBtn: "#experience_add",
 	maxFields: 3,
 	removeSelector: ".exp_remove",
@@ -349,7 +349,7 @@ $("#experience_wrap").remAddRow({
 	`
 });
 
-$("#root_wrap").remAddRow({
+$("#root_wrap").addRemRow({
   addBtn: "#root_add",
   maxFields: 3,
   fieldName: "root",
