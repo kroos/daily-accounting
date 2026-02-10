@@ -63,8 +63,8 @@ $currentYear = Carbon::now()->year;
 
 </body>
 @vite(['resources/js/app.js'])
-<script type="javascript" src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
-<script type="javascript" src="{{ asset('js/ckeditor/adapters/jquery.js') }}"></script>
+<script src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
+<script src="{{ asset('js/ckeditor/adapters/jquery.js') }}"></script>
 <!-- </script> -->
 <script type="module">
 	(function($){
