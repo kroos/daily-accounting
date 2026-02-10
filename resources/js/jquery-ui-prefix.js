@@ -1,4 +1,13 @@
-import '../../node_modules/jquery-ui/dist/jquery-ui';
+const $ = window.jQuery;
+
+// safety check (optional but recommended)
+if (!$) {
+	throw new Error('jQuery UI prefix loaded before jQuery');
+}
+
+// load jquery-ui AFTER jQuery exists
+import 'jquery-ui/dist/jquery-ui';
+
 (function ($) {
 	// Iterate over all methods in jQuery UI's namespace
 	$.each($.ui, function (name) {

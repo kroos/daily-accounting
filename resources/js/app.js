@@ -50,12 +50,16 @@ import './fullcalendar';
 // bootstrap validator 5
 import	'bootstrapValidator5';
 
-// bootstrap
-import	'./bootstrap';
-
 // addRemoveRow
 import	'addremrow-validator5-swal2-ajax';
 
 // datatable plugin
 import	'./dataTable-any-number.js';
 import	'./dataTable-moment.js';
+
+// bootstrap
+import	'./bootstrap';
+
+// plugin variable
+import config from './config/plugins';
+window.config = config;

@@ -18,18 +18,18 @@ $currentYear = Carbon::now()->year;
 	<!-- <title>Laravel11 Boilerplate</title> -->
 	<title>{{ config('app.name', 'Laravel') }}</title>
 
-	<link href="" type="image/x-icon" rel="icon" />
+	<link href="{{ asset('images/logo.png') }}" type="image/x-icon" rel="icon" />
 
 	<!-- Styles / Scripts -->
-	@vite(['resources/scss/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
+	@vite(['resources/scss/app.scss', 'resources/css/app.css'])
 
 	<!-- Bootswatch Cerulean CSS -->
-	<link href="{{ URL::asset('css/bootstrap.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
 	<!-- Livewire CSS -->
 
 </head>
 
-<body class="bg-secondary bg-opacity-75">
+<body class="bg-secondary bg-opacity-75" data-route="{{ Route::currentRouteName() }}">
 	<div class="container-fluid row min-vh-100 align-items-center justify-content-center mx-auto">
 
 		@include('layouts.navbar')
@@ -62,11 +62,11 @@ $currentYear = Carbon::now()->year;
 	</div>
 
 </body>
+@vite(['resources/js/app.js'])
 <script type="javascript" src="{{ asset('js/ckeditor/ckeditor.js') }}"></script>
 <script type="javascript" src="{{ asset('js/ckeditor/adapters/jquery.js') }}"></script>
 <!-- </script> -->
 <script type="module">
-	jQuery.noConflict ();
 	(function($){
 		$(document).ready(function(){
 			@section('js')
