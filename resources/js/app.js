@@ -47,11 +47,12 @@ import  './chart';
 // fullcalendar
 import './fullcalendar';
 
-// bootstrap validator 5
-import	'bootstrapvalidator5';
-
 // addRemoveRow
 import	'addremrow-validator5-swal2-ajax';
+// import	'addremrow';
+
+// bootstrap validator 5
+import	'bootstrapvalidator5';
 
 // datatable plugin
 import	'./dataTable-any-number.js';
@@ -60,6 +61,6 @@ import	'./dataTable-moment.js';
 // bootstrap
 import	'./bootstrap';
 
-// plugin variable
-import config from './config/plugins';
+// plugin comfig
+import config from './config/plugins.js';
 window.config = config;
