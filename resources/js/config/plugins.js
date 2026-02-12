@@ -75,20 +75,20 @@ import config from '@/config/plugins';
 $('.series').select2(Config.select2);
 
 $('#table').DataTable({
-    ...Config.datatable,
-    paging: false, // override example
+	...Config.datatable,
+	paging: false, // override example
 });
 
 If you want to **extend** instead:
 
 ```js
 columnDefs: [
-    ...(config.datatable.columnDefs || []),
-    { type: 'date', targets: [1] },
+	...(config.datatable.columnDefs || []),
+	{ type: 'date', targets: [1] },
 ],
 ```
 
 new Calendar(el, {
-    ...Config.fullcalendar,
+	...Config.fullcalendar,
 });
 */

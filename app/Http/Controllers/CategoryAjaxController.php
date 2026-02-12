@@ -56,6 +56,9 @@ class CategoryAjaxController extends Controller
 							->when($request->type, function (Builder $query) use ($request){
 								$query->where('type', $request->type);
 							})
+							->when($request->id, function (Builder $query) use ($request){
+								$query->where('id', $request->id);
+							})
 							// ->ddrawsql();
 							// ->pluck('category', 'id');
 							->get();
