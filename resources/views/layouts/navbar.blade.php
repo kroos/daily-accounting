@@ -1,5 +1,5 @@
 <!-- navigator -->
-<nav class="navbar navbar-expand-lg align-self-start bg-primary rounded m-0 mb-1" data-bs-theme="dark" style="--bg-opacity: .25;">
+<nav class="navbar navbar-expand-lg bg-primary rounded m-0 mb-1" data-bs-theme="dark" style="--bg-opacity: .25;">
 	<div class="container">
 
 		<img src="{{ asset('images/logo.png') }}" alt="{!! config('app.name') !!}" title="{!! config('app.name') !!}" width="7%" class="mx-2 my-auto img-responsive img-rounded">

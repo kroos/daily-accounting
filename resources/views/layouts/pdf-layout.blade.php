@@ -1,9 +1,13 @@
+<?php
+// \Auth::user()->setConnection('mysql3');
+\Auth::user()->belongstostaff->unreadNotifications->markAsRead();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>{{ config('app.name', 'Laravel') }}</title>
+	<title>@yield('title', 'BTM Document')</title>
 	<style>
 		* { margin: 0; padding: 0; box-sizing: border-box; }
 		@page { size: A4; margin: 0; }
@@ -152,9 +156,9 @@
 
 	<!-- Footer -->
 	<div class="footer">
-		<!-- <div class="footer-box"> -->
-			{{ config('app.name', 'Laravel') }}
-		<!-- </div> -->
+		<div class="footer-box">
+			© Document
+		</div>
 	</div>
 </body>
 </html>
